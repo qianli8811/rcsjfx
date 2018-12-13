@@ -41,7 +41,6 @@ import com.jeeplus.modules.xssj.service.CCustsaleTjService;
 @Controller
 @RequestMapping(value = "${adminPath}/xssj/cCustsaleTj")
 public class CCustsaleTjController extends BaseController {
-
 	@Autowired
 	private CCustsaleTjService cCustsaleTjService;
 	@ModelAttribute
@@ -55,7 +54,10 @@ public class CCustsaleTjController extends BaseController {
 		}
 		return entity;
 	}
-	
+
+
+
+
 	/**
 	 * 企业核心销售数据统计列表页面
 	 */

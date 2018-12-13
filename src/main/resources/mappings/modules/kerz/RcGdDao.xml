@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.kerz.dao.RcGdDao">
+    
+	<sql id="rcGdColumns">
+		a.id AS "id",
+		a.khzl_id AS "rcKhzl.id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.gdxm AS "name",
+		a.sort AS "sort",
+
+		a.khlx AS "khlx",
+		a.zgb AS "zgb",
+		a.gdxm AS "gdxm",
+		a.sfzh AS "sfzh",
+		a.xb AS "xb",
+		a.nl AS "nl",
+		a.is_dbr AS "isDbr",
+		a.jtcy AS "jtcy",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		r.khjm AS "rcKhzl.khjm",
+		r.khmc AS "rcKhzl.khmc"
+	</sql>
+
+	<sql id="rcGdJoins">
+		LEFT JOIN rc_khzl r on r.id = a.khzl_id
+		LEFT JOIN rc_gd b ON b.id = a.parent_id
+	</sql>
+
+
+	<select id="get" resultType="RcGd" >
+		SELECT
+			<include refid="rcGdColumns"/>
+		FROM rc_gd a
+		<include refid="rcGdJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RcGd" >
+		SELECT
+			<include refid="rcGdColumns"/>
+		FROM rc_gd a
+		<include refid="rcGdJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="parent != '' and parent != null and parent.id != '' and parent.id != null  ">
+				AND	a.parent_id = #{parent.id}
+			</if>
+			<if test="rcKhzl != '' and rcKhzl != null and rcKhzl.khjm != '' and rcKhzl.khjm != null  ">
+				AND	r.khjm = #{rcKhzl.khjm}
+			</if>
+			<if test="rcKhzl != '' and rcKhzl != null and rcKhzl.id != null and rcKhzl.id != ''">
+				AND	a.khzl_id = #{rcKhzl.id}
+			</if>
+			<!--<if test="rcKhzl == '' OR rcKhzl == null OR rcKhzl.id == null OR rcKhzl.id == ''">
+				AND	(a.khzl_id IS  null    OR  	a.khzl_id ='')
+			</if>-->
+			<if test="gdxm != '' and gdxm != null ">
+				AND	a.gdxm LIKE CONCAT('%',#{gdxm},'%' )
+			</if>
+			<if test="rcKhzl != '' and rcKhzl != null and rcKhzl.khmc != '' and rcKhzl.khmc != null  ">
+				AND	r.khmc LIKE CONCAT('%',#{rcKhzl.khmc},'%' )
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY r.khjm DESC,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RcGd" >
+		SELECT
+			<include refid="rcGdColumns"/>
+		FROM rc_gd a
+		<include refid="rcGdJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="rcKhzl != null and rcKhzl.id != ''">
+				AND	a.khzl_id = #{rcKhzl.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rc_gd(
+				id,
+				khzl_id,
+				parent_id,
+				parent_ids,
+				sort,
+				khlx,
+				zgb,
+				gdxm,
+				sfzh,
+				xb,
+				nl,
+				is_dbr,
+				jtcy,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{rcKhzl.id},
+			#{parent.id},
+			#{parentIds},
+			#{sort},
+			#{khlx},
+			#{zgb},
+			#{gdxm},
+			#{sfzh},
+			#{xb},
+			#{nl},
+			#{isDbr},
+			#{jtcy},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rc_gd SET 	
+					id = #{id},
+
+					khzl_id = #{rcKhzl.id},
+					parent_id = #{parent.id},
+					parent_ids = #{parentIds},
+					sort = #{sort},
+					khlx = #{khlx},
+
+					zgb = #{zgb},
+
+					gdxm = #{gdxm},
+
+					sfzh = #{sfzh},
+
+					xb = #{xb},
+
+					nl = #{nl},
+
+					is_dbr = #{isDbr},
+
+					jtcy = #{jtcy},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	<update id="updateParentIds">
+		UPDATE rc_gd SET
+		parent_id = #{parent.id},
+		parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM rc_gd
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE rc_gd SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RcGd" statementType="STATEMENT">
+		select * FROM rc_gd  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="findByParentIdsLike" resultType="RcGd">
+		SELECT
+		<include refid="rcGdColumns"/>
+		FROM rc_gd a
+		<include refid="rcGdJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}
+		ORDER BY a.sort
+	</select>
+
+
+	
+</mapper>

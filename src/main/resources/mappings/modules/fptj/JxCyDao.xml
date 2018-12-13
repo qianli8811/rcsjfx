@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.fptj.dao.JxCyDao">
+    
+	<sql id="jxCyColumns">
+		a.id AS "id",
+		a.gmfmc AS "gmfmc",
+		a.gmfsh AS "xsfh",
+		a.kplx AS "jsplx",
+		a.xzrq AS "zhcqrq",
+
+
+
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="jxCyJoins">
+	</sql>
+
+	<select id="get" resultType="JxCy" >
+		SELECT
+			<include refid="jxCyColumns"/>
+		FROM jx_cy a
+		<include refid="jxCyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="JxCy" >
+		SELECT
+			<include refid="jxCyColumns"/>
+		FROM /*jx_cy*/ jxfp_head a
+		<!--<include refid="jxCyJoins"/>-->
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="gmfmc != null and gmfmc != ''">
+				AND a.xsfmc LIKE
+					<if test="dbName == 'oracle'">'%'||#{gmfmc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{gmfmc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{gmfmc},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.xzrq DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="JxCy" >
+		SELECT
+			<include refid="jxCyColumns"/>
+		FROM jx_cy a
+		<include refid="jxCyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jx_cy(
+				id,
+				rzjg,
+				rzje,
+				jsplx,
+				zhcqrq,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{rzjg},
+			#{rzje},
+			#{jsplx},
+			#{zhcqrq},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jx_cy SET 	
+					id = #{id},
+
+					rzjg = #{rzjg},
+
+					rzje = #{rzje},
+
+					jsplx = #{jsplx},
+
+					zhcqrq = #{zhcqrq},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM jx_cy
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE jx_cy SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="JxCy" statementType="STATEMENT">
+		select * FROM jx_cy  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

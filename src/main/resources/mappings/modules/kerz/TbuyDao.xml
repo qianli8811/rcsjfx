@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.kerz.dao.TbuyDao">
+    
+	<sql id="tbuyColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.code AS "code",
+		a.city AS "city",
+		a.areaclass AS "areaclass",
+		a.address AS "address",
+		a.postcode AS "postcode",
+		a.homepage AS "homepage",
+		a.linkname AS "linkname",
+		a.tel AS "tel",
+		a.mobile AS "mobile",
+		a.email AS "email",
+		a.bank AS "bank",
+		a.bankno AS "bankno",
+		a.usertype AS "usertype",
+		a.sfcode AS "sfcode",
+		a.clienttype AS "clienttype",
+		a.trackstu AS "trackstu",
+		a.yxclass AS "yxclass",
+		a.recorddate AS "recorddate",
+		a.salerid AS "salerid",
+		a.sex AS "sex",
+		a.fax AS "fax",
+		a.taxcode AS "taxcode",
+		a.sfsn AS "sfsn",
+		a.jgsn AS "jgsn",
+		a.linktel AS "linktel",
+		a.desp AS "desp",
+		a.trackdate AS "trackdate",
+		a.preholdstart AS "preholdstart",
+		a.preholdend AS "preholdend",
+		a.clientusefor AS "clientusefor",
+		a.namejc AS "namejc",
+		a.fr AS "fr",
+		a.zczb AS "zczb",
+		a.jyfw AS "jyfw",
+		a.ywjbid AS "ywjbid",
+		a.company AS "company",
+		a.sxtype AS "sxtype",
+		a.sxlimit AS "sxlimit",
+		a.sxlimitdate AS "sxlimitdate",
+		a.sxlimitdatee AS "sxlimitdatee",
+		a.xypjid AS "xypjid",
+		a.zdgzstu AS "zdgzstu",
+		a.infofrom AS "infofrom",
+		a.usestu AS "usestu",
+		a.recdate AS "recdate",
+		a.age AS "age",
+		a.mainclass AS "mainclass",
+		a.clientclass AS "clientclass",
+		a.hasson AS "hasson",
+		a.isjh AS "isjh",
+		a.tuandui AS "tuandui",
+		a.producttype AS "producttype",
+		a.qd AS "qd",
+		a.xl AS "xl",
+		a.companyadd AS "companyadd",
+		a.clientcode AS "clientcode",
+		a.largearea AS "largearea",
+		a.hxgoodsrate AS "hxgoodsrate",
+		a.gdnum AS "gdnum"
+	</sql>
+
+	<sql id="tbuyJoins">
+	</sql>
+
+
+	<select id="get" resultType="Tbuy" >
+		SELECT
+			<include refid="tbuyColumns"/>
+		FROM tbuy a
+		<include refid="tbuyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Tbuy" >
+		SELECT
+			<include refid="tbuyColumns"/>
+		FROM tbuy a
+		<include refid="tbuyJoins"/>
+		<where>
+
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Tbuy" >
+		SELECT
+			<include refid="tbuyColumns"/>
+		FROM tbuy a
+		<include refid="tbuyJoins"/>
+
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbuy(
+				id,
+				name,
+				code,
+				city,
+				areaclass,
+				address,
+				postcode,
+				homepage,
+				linkname,
+				tel,
+				mobile,
+				email,
+				bank,
+				bankno,
+				usertype,
+				sfcode,
+				clienttype,
+				trackstu,
+				yxclass,
+				recorddate,
+				salerid,
+				sex,
+				fax,
+				taxcode,
+				sfsn,
+				jgsn,
+				linktel,
+				desp,
+				trackdate,
+				preholdstart,
+				preholdend,
+				clientusefor,
+				namejc,
+				fr,
+				zczb,
+				jyfw,
+				ywjbid,
+				company,
+				sxtype,
+				sxlimit,
+				sxlimitdate,
+				sxlimitdatee,
+				xypjid,
+				zdgzstu,
+				infofrom,
+				usestu,
+				recdate,
+				age,
+				mainclass,
+				clientclass,
+				hasson,
+				isjh,
+				tuandui,
+				producttype,
+				qd,
+				xl,
+				companyadd,
+				clientcode,
+				largearea,
+				hxgoodsrate,
+				gdnum
+		) VALUES (
+			#{id},
+			#{name},
+			#{code},
+			#{city},
+			#{areaclass},
+			#{address},
+			#{postcode},
+			#{homepage},
+			#{linkname},
+			#{tel},
+			#{mobile},
+			#{email},
+			#{bank},
+			#{bankno},
+			#{usertype},
+			#{sfcode},
+			#{clienttype},
+			#{trackstu},
+			#{yxclass},
+			#{recorddate},
+			#{salerid},
+			#{sex},
+			#{fax},
+			#{taxcode},
+			#{sfsn},
+			#{jgsn},
+			#{linktel},
+			#{desp},
+			#{trackdate},
+			#{preholdstart},
+			#{preholdend},
+			#{clientusefor},
+			#{namejc},
+			#{fr},
+			#{zczb},
+			#{jyfw},
+			#{ywjbid},
+			#{company},
+			#{sxtype},
+			#{sxlimit},
+			#{sxlimitdate},
+			#{sxlimitdatee},
+			#{xypjid},
+			#{zdgzstu},
+			#{infofrom},
+			#{usestu},
+			#{recdate},
+			#{age},
+			#{mainclass},
+			#{clientclass},
+			#{hasson},
+			#{isjh},
+			#{tuandui},
+			#{producttype},
+			#{qd},
+			#{xl},
+			#{companyadd},
+			#{clientcode},
+			#{largearea},
+			#{hxgoodsrate},
+			#{gdnum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbuy SET 	
+					id = #{id},
+
+					name = #{name},
+
+					code = #{code},
+
+					city = #{city},
+
+					areaclass = #{areaclass},
+
+					address = #{address},
+
+					postcode = #{postcode},
+
+					homepage = #{homepage},
+
+					linkname = #{linkname},
+
+					tel = #{tel},
+
+					mobile = #{mobile},
+
+					email = #{email},
+
+					bank = #{bank},
+
+					bankno = #{bankno},
+
+					usertype = #{usertype},
+
+					sfcode = #{sfcode},
+
+					clienttype = #{clienttype},
+
+					trackstu = #{trackstu},
+
+					yxclass = #{yxclass},
+
+					recorddate = #{recorddate},
+
+					salerid = #{salerid},
+
+					sex = #{sex},
+
+					fax = #{fax},
+
+					taxcode = #{taxcode},
+
+					sfsn = #{sfsn},
+
+					jgsn = #{jgsn},
+
+					linktel = #{linktel},
+
+					desp = #{desp},
+
+					trackdate = #{trackdate},
+
+					preholdstart = #{preholdstart},
+
+					preholdend = #{preholdend},
+
+					clientusefor = #{clientusefor},
+
+					namejc = #{namejc},
+
+					fr = #{fr},
+
+					zczb = #{zczb},
+
+					jyfw = #{jyfw},
+
+					ywjbid = #{ywjbid},
+
+					company = #{company},
+
+					sxtype = #{sxtype},
+
+					sxlimit = #{sxlimit},
+
+					sxlimitdate = #{sxlimitdate},
+
+					sxlimitdatee = #{sxlimitdatee},
+
+					xypjid = #{xypjid},
+
+					zdgzstu = #{zdgzstu},
+
+					infofrom = #{infofrom},
+
+					usestu = #{usestu},
+
+					recdate = #{recdate},
+
+					age = #{age},
+
+					mainclass = #{mainclass},
+
+					clientclass = #{clientclass},
+
+					hasson = #{hasson},
+
+					isjh = #{isjh},
+
+					tuandui = #{tuandui},
+
+					producttype = #{producttype},
+
+					qd = #{qd},
+
+					xl = #{xl},
+
+					companyadd = #{companyadd},
+
+					clientcode = #{clientcode},
+
+					largearea = #{largearea},
+
+					hxgoodsrate = #{hxgoodsrate},
+
+					gdnum = #{gdnum}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM tbuy
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE tbuy SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Tbuy" statementType="STATEMENT">
+		select * FROM tbuy  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

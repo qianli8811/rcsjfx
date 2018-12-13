@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.kerz.dao.KeRzDao">
+    
+	<sql id="keRzColumns">
+		a.id AS "id",
+		a.khzl_id AS "rckhzl.id",
+		r.khmc AS "rckhzl.khmc",
+		a.rzjg AS "rzjg",
+		a.rzje AS "rzje",
+		a.rzjssj AS "rzjssj",
+		a.rzkssj AS "rzkssj",
+		a.is_jq AS "isJq",
+		a.rzlx AS "rzlx",
+		a.zyje AS "zyje",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="keRzJoins">
+		LEFT JOIN rc_khzl r ON a.khzl_id = r.id
+	</sql>
+
+
+	<select id="get" resultType="KeRz" >
+		SELECT
+			<include refid="keRzColumns"/>
+		FROM ke_rz a
+		<include refid="keRzJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="KeRz" >
+		SELECT
+			<include refid="keRzColumns"/>
+		FROM ke_rz a
+		<include refid="keRzJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="rckhzl != null and rckhzl != '' and  rckhzl.id != null and rckhzl.id != ''">
+				AND r.id = #{rckhzl.id}
+			</if>
+			<if test="rzjg != null and rzjg != ''">
+				AND a.rzjg = #{rzjg}
+			</if>
+			<if test="rzje != null and rzje != ''">
+				AND a.rzje = #{rzje}
+			</if>
+			<if test="rzjssj != null and rzjssj != ''">
+				AND a.rzjssj >= #{rzjssj}
+			</if>
+			<if test="rzkssj != null and rzkssj != ''">
+				AND #{rzkssj} >= a.rzkssj
+			</if>
+			<if test="isJq != null and isJq != ''">
+				AND a.is_jq = #{isJq}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="KeRz" >
+		SELECT
+			<include refid="keRzColumns"/>
+		FROM ke_rz a
+		<include refid="keRzJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ke_rz(
+				id,
+				khzl_id,
+				rzjg,
+				rzje,
+				rzjssj,
+				rzkssj,
+				is_jq,
+				rzlx,
+				zyje,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{rckhzl.id},
+			#{rzjg},
+			#{rzje},
+			#{rzjssj},
+			#{rzkssj},
+			#{isJq},
+
+			#{rzlx},
+			#{zyje},
+
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ke_rz SET 	
+					id = #{id},
+
+					rzjg = #{rzjg},
+
+					rzje = #{rzje},
+
+					rzjssj = #{rzjssj},
+
+					rzkssj = #{rzkssj},
+
+					is_jq = #{isJq},
+					rzlx =	#{rzlx},
+					zyje =	#{zyje},
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM ke_rz
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE ke_rz SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="KeRz" statementType="STATEMENT">
+		select * FROM ke_rz  where ${propertyName} = '${value}'
+	</select>
+	<!-- 统计生意资金构成-->
+	<select id="getSyzjgc" resultType="java.util.Map" >
+		SELECT k.rzlx AS 'name',sum(k.rzje) AS 'value' FROM ke_rz k
+		WHERE
+			    k.del_flag = 0
+
+			AND
+				k.is_jq = 0
+			<if test="rckhzl != null and rckhzl != '' and rckhzl.id != null and rckhzl.id != '' ">
+				AND	k.khzl_id = #{rckhzl.id}
+			</if>
+		GROUP BY k.rzlx
+	</select>
+</mapper>

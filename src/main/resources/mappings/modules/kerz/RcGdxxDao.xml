@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.kerz.dao.RcGdxxDao">
+    
+	<sql id="rcGdxxColumns">
+		a.id AS "id",
+		a.khzl_id AS "rcKhzl.id",
+		a.khlx AS "khlx",
+		a.gdxm AS "gdxm",
+		a.sfzh AS "sfzh",
+		a.xb AS "xb",
+		a.nl AS "nl",
+		a.zgb AS "zgb",
+		a.xl AS "xl",
+		a.dh AS "dh",
+		a.is_marry AS "isMarry",
+		a.is_dbr AS "isDbr",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="rcGdxxJoins">
+	</sql>
+
+
+	<select id="get" resultType="RcGdxx" >
+		SELECT
+			<include refid="rcGdxxColumns"/>
+		FROM rc_gdxx a
+		<include refid="rcGdxxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RcGdxx" >
+		SELECT
+			<include refid="rcGdxxColumns"/>
+		FROM rc_gdxx a
+		<include refid="rcGdxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="rcKhzl != null and rcKhzl != '' and rcKhzl.id != null and rcKhzl.id != ''">
+				AND a.khzl_id = #{rcKhzl.id}
+			</if>
+			<if test="khlx != null and khlx != ''">
+				AND a.khlx = #{khlx}
+			</if>
+			<if test="gdxm != null and gdxm != ''">
+				AND a.gdxm = #{gdxm}
+			</if>
+			<if test="isMarry != null and isMarry != ''">
+				AND a.is_marry = #{isMarry}
+			</if>
+			<if test="isDbr != null and isDbr != ''">
+				AND a.is_dbr = #{isDbr}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RcGdxx" >
+		SELECT
+			<include refid="rcGdxxColumns"/>
+		FROM rc_gdxx a
+		<include refid="rcGdxxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rc_gdxx(
+				id,
+				khzl_id,
+				khlx,
+				gdxm,
+				sfzh,
+				xb,
+				nl,
+				zgb,
+				xl,
+				dh,
+
+				is_marry,
+				is_dbr,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{rcKhzl.id},
+			#{khlx},
+			#{gdxm},
+			#{sfzh},
+			#{xb},
+			#{nl},
+			#{zgb},
+			#{xl},
+			#{dh},
+
+			#{isMarry},
+			#{isDbr},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rc_gdxx SET 	
+					id = #{id},
+
+					khzl_id = #{rcKhzl.id},
+
+					khlx = #{khlx},
+
+					gdxm = #{gdxm},
+
+					sfzh = #{sfzh},
+
+					xb = #{xb},
+
+					nl = #{nl},
+
+					zgb = #{zgb},
+					xl = #{xl},
+
+					dh = #{dh},
+
+					is_marry = #{isMarry},
+
+					is_dbr = #{isDbr},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM rc_gdxx
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE rc_gdxx SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RcGdxx" statementType="STATEMENT">
+		select * FROM rc_gdxx  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

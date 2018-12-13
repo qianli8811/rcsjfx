@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.fpsj.dao.JxfpItemDao">
+    
+	<sql id="jxfpItemColumns">
+		a.id AS "id",
+		a.jxfp_head_id AS "jxfpHead.id",
+		a.hwmc AS "hwmc",
+		a.hxmh AS "hxmh",
+		a.ggxh AS "ggxh",
+		a.bhsje AS "bhsje",
+		a.bhsdj AS "bhsdj",
+		a.hsdj AS "hsdj",
+		a.hsje AS "hsje",
+		a.se AS "se",
+		a.xmsl AS "xmsl",
+		a.dw AS "dw",
+		a.sl AS "sl",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="jxfpItemJoins">
+	</sql>
+
+
+	<select id="get" resultType="JxfpItem" >
+		SELECT
+			<include refid="jxfpItemColumns"/>
+		FROM jxfp_item a
+		<include refid="jxfpItemJoins"/>
+		WHERE a.id = #{id} OR (a.jxfp_head_id = #{jxfpHead.id}  AND a.hxmh = #{hxmh})
+	</select>
+
+	<select id="findList" resultType="JxfpItem" >
+		SELECT
+			<include refid="jxfpItemColumns"/>
+		FROM jxfp_item a
+		<include refid="jxfpItemJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} AND a.jxfp_head_id = #{jxfpHead.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="JxfpItem" >
+		SELECT
+			<include refid="jxfpItemColumns"/>
+		FROM jxfp_item a
+		<include refid="jxfpItemJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} AND a.jxfp_head_id = #{jxfpHead.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jxfp_item(
+				id,
+				jxfp_head_id,
+				hwmc,
+				hxmh,
+				ggxh,
+				bhsje,
+				bhsdj,
+				hsdj,
+				hsje,
+				se,
+				xmsl,
+				dw,
+				sl,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{jxfpHead.id},
+			#{hwmc},
+			#{hxmh},
+			#{ggxh},
+			#{bhsje},
+			#{bhsdj},
+			#{hsdj},
+			#{hsje},
+			#{se},
+			#{xmsl},
+			#{dw},
+			#{sl},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jxfp_item SET 	
+					id = #{id},
+
+					jxfp_head_id = #{jxfpHead.id},
+
+					hwmc = #{hwmc},
+					hxmh = #{hxmh},
+
+					ggxh = #{ggxh},
+
+					bhsje = #{bhsje},
+
+					bhsdj = #{bhsdj},
+
+					hsdj = #{hsdj},
+
+					hsje = #{hsje},
+
+					se = #{se},
+
+					xmsl = #{xmsl},
+
+					dw = #{dw},
+
+					sl = #{sl},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM jxfp_item
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE jxfp_item SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="JxfpItem" statementType="STATEMENT">
+		select * FROM jxfp_item  where ${propertyName} = '${value}'
+	</select>
+	<select id="getGyskpsj" resultType="java.util.Map" parameterType="com.jeeplus.modules.xssj.entity.CCustsaleTj">
+		SELECT
+		j.hwmc,
+		sum(j.hsje) AS hsje
+		FROM
+			jxfp_item j left join jxfp_head h on h.id = j.jxfp_head_id
+		<where>
+			<if test="ckname != null and ckname != '' ">
+				h.xsfmc = #{ckname}
+			</if>
+		</where>
+		GROUP BY j.hwmc ORDER BY  hsje limit 10
+	</select>
+</mapper>

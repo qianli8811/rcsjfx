@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.xssj.dao.CCustsaleTjDao">
+    
+	<sql id="CCustsaleTjColumns">
+		a.id AS "id",
+		a.nianfen AS "nianfen",
+		a.yuefen AS "yuefen",
+		a.ckname AS "ckname",
+		a.tjname AS "tjname",
+		a.num AS "num",
+		a.yiyue AS "yiyue",
+		a.eryue AS "eryue",
+		a.sanyue AS "sanyue",
+		a.siyue AS "siyue",
+		a.wuyue AS "wuyue",
+		a.liuyue AS "liuyue",
+		a.qiyue AS "qiyue",
+		a.bayue AS "bayue",
+		a.jiuyue AS "jiuyue",
+		a.shiyue AS "shiyue",
+		a.syyyue AS "syyyue",
+		a.seyyue AS "seyyue",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="CCustsaleTjJoins">
+	</sql>
+
+
+	<select id="get" resultType="CCustsaleTj" >
+		SELECT
+			<include refid="CCustsaleTjColumns"/>
+		FROM c_custsale_tj a
+		<include refid="CCustsaleTjJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="CCustsaleTj" >
+		SELECT
+			<include refid="CCustsaleTjColumns"/>
+		FROM c_custsale_tj a
+		<include refid="CCustsaleTjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="beginNianfen != null and endNianfen != null and beginNianfen != '' and endNianfen != ''">
+				AND a.nianfen BETWEEN #{beginNianfen} AND #{endNianfen}
+			</if>
+			<if test="ckname != null and ckname != ''">
+				AND a.ckname LIKE
+					<if test="dbName == 'oracle'">'%'||#{ckname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{ckname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{ckname},'%')</if>
+			</if>
+			<if test="tjname != null and tjname != ''">
+				AND a.tjname = #{tjname}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="CCustsaleTj" >
+		SELECT
+			<include refid="CCustsaleTjColumns"/>
+		FROM c_custsale_tj a
+		<include refid="CCustsaleTjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO c_custsale_tj(
+				id,
+				nianfen,
+				yuefen,
+				ckname,
+				tjname,
+				num,
+				yiyue,
+				eryue,
+				sanyue,
+				siyue,
+				wuyue,
+				liuyue,
+				qiyue,
+				bayue,
+				jiuyue,
+				shiyue,
+				syyyue,
+				seyyue,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{nianfen},
+			#{yuefen},
+
+			#{ckname},
+			#{tjname},
+			#{num},
+			#{yiyue},
+			#{eryue},
+			#{sanyue},
+			#{siyue},
+			#{wuyue},
+			#{liuyue},
+			#{qiyue},
+			#{bayue},
+			#{jiuyue},
+			#{shiyue},
+			#{syyyue},
+			#{seyyue},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE c_custsale_tj SET 	
+					id = #{id},
+
+					nianfen = #{nianfen},
+					yuefen = #{yuefen},
+					ckname = #{ckname},
+
+					tjname = #{tjname},
+
+					num = #{num},
+
+					yiyue = #{yiyue},
+
+					eryue = #{eryue},
+
+					sanyue = #{sanyue},
+
+					siyue = #{siyue},
+
+					wuyue = #{wuyue},
+
+					liuyue = #{liuyue},
+
+					qiyue = #{qiyue},
+
+					bayue = #{bayue},
+
+					jiuyue = #{jiuyue},
+
+					shiyue = #{shiyue},
+
+					syyyue = #{syyyue},
+
+					seyyue = #{seyyue},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+
+	<!--物理删除-->
+	<update id="deleteAll">
+		DELETE FROM c_custsale_tj
+	</update>
+	<!--物理删除-->
+	<update id="deleteByNianfen">
+		DELETE FROM c_custsale_tj  WHERE nianfen = #{nianfen}
+	</update>
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM c_custsale_tj
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE c_custsale_tj SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<update id="creatBenNianTable" parameterType="String">
+		CREATE TABLE ${tableName}  (
+		  ID varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+		  gongchang varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '工厂',
+		  daqu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '大区',
+		  chengshi varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '城市群',
+		  yewuyuan varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务员',
+		  cust_no varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户代码',
+		  cust_name varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户名称',
+		  dapinleimiaoshu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '大品类描述',
+		  yijipinleimiaoshu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '一级品类描述',
+		  erjipinleimiaoshu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '二级品类描述',
+		  sanjipinleimiaoshu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '三级品类描述',
+		  chanpinxianmiaoshu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品线描述',
+		  wuliaobianma varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '物料编码',
+		  wuliaomiaoshu varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '物料描述',
+		  xiang double(255, 8) NULL DEFAULT NULL COMMENT '箱',
+		  dun double(255, 8) NULL DEFAULT NULL COMMENT '吨',
+		  xiaoshoushouru double(255, 8) NULL DEFAULT NULL COMMENT '销售收入',
+		  jingzhi double(255, 8) NULL DEFAULT NULL COMMENT '净值',
+		  shuie double(255, 8) NULL DEFAULT NULL COMMENT '税额',
+		  zhanlvjine double(255, 8) NULL DEFAULT NULL COMMENT '战略价金额',
+		  zhekoujine double(255, 8) NULL DEFAULT NULL COMMENT '折扣金额',
+		  zhekoubili double(255, 8) NULL DEFAULT NULL COMMENT '折扣百分比',
+		  shoudafangjiancheng varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '售达方简称',
+		  fapiaoshiqi datetime(0) NULL DEFAULT NULL COMMENT '出具发票日期',
+		  dingdanbianhao varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号码',
+		  danjuriqi datetime(0) NULL DEFAULT NULL COMMENT '单据日期',
+		  kucundidian varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '库存地点',
+		  caigoubianhao varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '采购订单号码',
+		  create_by varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+		  create_date datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+		  update_by varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新者',
+		  update_date datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+		  remarks varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注信息',
+		  del_flag char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记',
+		  PRIMARY KEY (ID) USING BTREE,
+		  INDEX c_index_f(fapiaoshiqi, danjuriqi) USING BTREE,
+		  INDEX c_index_name(cust_name, del_flag) USING BTREE
+		) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+	</update>
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CCustsaleTj" statementType="STATEMENT">
+		select * FROM c_custsale_tj  where ${propertyName} = '${value}'
+	</select>
+	<select id="getXssjtj" resultType="CCustsaleTj"  >
+		SELECT
+		c.daqu AS daqu,
+		c.cust_no AS khjm,
+		c.cust_name as ckname,
+		DATE_FORMAT( c.fapiaoshiqi, '%Y' ) AS nianfen,
+		MONTH(MAX(c.fapiaoshiqi)) AS yuefen,
+		<if test="tjname != null and tjname != '' ">
+		<if test="tjname == '1'.toString() ">
+			1 AS 'tjname',
+			sum(xiaoshoushouru) num,
+			sum(if(MONTH(c.fapiaoshiqi) = 1,xiaoshoushouru,"")) as 'yiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 2,xiaoshoushouru,"")) as 'eryue',
+			sum(if(MONTH(c.fapiaoshiqi) = 3,xiaoshoushouru,"")) as 'sanyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 4,xiaoshoushouru,"")) as 'siyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 5,xiaoshoushouru,"")) as 'wuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 6,xiaoshoushouru,"")) as 'liuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 7,xiaoshoushouru,"")) as 'qiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 8,xiaoshoushouru,"")) as 'bayue',
+			sum(if(MONTH(c.fapiaoshiqi) = 9,xiaoshoushouru,"")) as 'jiuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 10,xiaoshoushouru,"")) as 'shiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 11,xiaoshoushouru,"")) as 'syyyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 12,xiaoshoushouru,"")) as 'seyyue'
+		</if>
+		<if test="tjname == '2'.toString() ">
+			2 AS 'tjname',
+			sum(jingzhi) num,
+			sum(if(MONTH(c.fapiaoshiqi) = 1,jingzhi,"")) as 'yiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 2,jingzhi,"")) as 'eryue',
+			sum(if(MONTH(c.fapiaoshiqi) = 3,jingzhi,"")) as 'sanyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 4,jingzhi,"")) as 'siyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 5,jingzhi,"")) as 'wuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 6,jingzhi,"")) as 'liuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 7,jingzhi,"")) as 'qiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 8,jingzhi,"")) as 'bayue',
+			sum(if(MONTH(c.fapiaoshiqi) = 9,jingzhi,"")) as 'jiuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 10,jingzhi,"")) as 'shiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 11,jingzhi,"")) as 'syyyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 12,jingzhi,"")) as 'seyyue'
+		</if>
+		<if test="tjname == '3'.toString() ">
+			3 AS 'tjname',
+			sum(shuie) num,
+			sum(if(MONTH(c.fapiaoshiqi) = 1,shuie,"")) as 'yiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 2,shuie,"")) as 'eryue',
+			sum(if(MONTH(c.fapiaoshiqi) = 3,shuie,"")) as 'sanyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 4,shuie,"")) as 'siyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 5,shuie,"")) as 'wuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 6,shuie,"")) as 'liuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 7,shuie,"")) as 'qiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 8,shuie,"")) as 'bayue',
+			sum(if(MONTH(c.fapiaoshiqi) = 9,shuie,"")) as 'jiuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 10,shuie,"")) as 'shiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 11,shuie,"")) as 'syyyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 12,shuie,"")) as 'seyyue'
+		</if>
+		<if test="tjname == '4'.toString() ">
+			4 AS 'tjname',
+			sum(zhanlvjine) num,
+			sum(if(MONTH(c.fapiaoshiqi) = 1,zhanlvjine,"")) as 'yiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 2,zhanlvjine,"")) as 'eryue',
+			sum(if(MONTH(c.fapiaoshiqi) = 3,zhanlvjine,"")) as 'sanyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 4,zhanlvjine,"")) as 'siyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 5,zhanlvjine,"")) as 'wuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 6,zhanlvjine,"")) as 'liuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 7,zhanlvjine,"")) as 'qiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 8,zhanlvjine,"")) as 'bayue',
+			sum(if(MONTH(c.fapiaoshiqi) = 9,zhanlvjine,"")) as 'jiuyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 10,zhanlvjine,"")) as 'shiyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 11,zhanlvjine,"")) as 'syyyue',
+			sum(if(MONTH(c.fapiaoshiqi) = 12,zhanlvjine,"")) as 'seyyue'
+		</if>
+	</if>
+		FROM
+		${tableName} c
+		WHERE
+		c.del_flag = '0'
+		<if test="ckname != null and ckname != '' ">
+			AND c.cust_name LIKE concat('%',#{ckname},'%')
+		</if>
+
+<!--		<if test="beginNianfen != null and endNianfen != null and beginNianfen != '' and endNianfen != ''">
+			AND c.fapiaoshiqi BETWEEN to_date(CONCAT(#{beginNianfen,jdbcType=VARCHAR}),'YYYY-MM-DD') AND to_date(#{endNianfen,jdbcType=VARCHAR},'YYYY-MM-DD')
+		</if>-->
+
+		<!--<if test="beginNianfen != null and beginNianfen != ''">
+			and c.fapiaoshiqi  &gt;= to_date(#{beginNianfen}, 'yyyy-MM-dd')
+		</if>
+		<if test="endNianfen != null and endNianfen != ''">
+			and c.fapiaoshiqi  &lt; to_date(#{endNianfen}, 'yyyy-MM-dd')
+		</if>-->
+		GROUP BY daqu,cust_no,ckname, nianfen
+		ORDER BY ckname DESC,nianfen DESC
+
+	</select>
+	<!-- 客户授信额度 -->
+<!--	<select id="getSxedu" resultType="com.jeeplus.modules.xssj.entity.CsxeduTj" parameterType="com.jeeplus.modules.xssj.entity.CsxeduTj" >
+
+		SELECT
+		t4.daqu,
+		t4.khmc,
+		t4.sfhz,
+		t4.flmzb,
+		t4.zjzzcs,
+		t4.kfzbl,
+		t4.dsyear,
+		t4.deyear,
+		t4.dyyear,
+		t4.sanyear,
+		t4.dyear,
+		t4.sxsxed,
+		t4.sxxxed,
+		t4.ljys,
+		t4.qnys,
+		t4.dcl,
+		t4.qnjd
+		FROM (
+		SELECT
+		&lt;!&ndash; t1.khjm AS khjm,&ndash;&gt;
+		&lt;!&ndash;IFNULL(t1.khjm,t3.khjm) AS khjm,&ndash;&gt;
+		 t3.daqu AS daqu,
+		&lt;!&ndash; t1.khmc AS khmc,&ndash;&gt;
+		IFNULL( t1.khmc, t3.ckName ) AS khmc,
+		IF( t1.khmc IS NULL, 0, 1 ) AS sfhz,
+		IFNULL(t1.flmzb,100) / 100 AS flmzb,
+		IFNULL(t1.zjzzcs,6) AS zjzzcs,
+		IFNULL(t1.kfzbl,60) / 100 AS kfzbl,
+		t3.dsyear AS dsyear,
+		t3.deyear AS deyear,
+		t3.dyyear AS dyyear,
+		t3.sanyear AS sanyear,
+		t3.dyear AS dyear,
+		( t3.sanyear / IFNULL(t1.zjzzcs,6)) / ( IFNULL(t1.flmzb,100) / 100 ) * ( IFNULL(t1.kfzbl,60) / 100 ) - IFNULL( t2.rzje, 0 ) AS sxsxed,
+		( t3.sanyear / IFNULL(t1.zjzzcs,6)) * ( IFNULL(t1.kfzbl,60) / 100 ) - IFNULL( t2.rzje, 0 ) AS sxxxed,
+		t5.ljys * t1.pjdwyj AS ljys,
+		t5.qnys * t1.pjdwyj AS qnys,
+		t3.ljxs / (t5.ljys * t1.pjdwyj) AS dcl,
+		t3.ljxs / (t5.qnys * t1.pjdwyj) AS qnjd
+		FROM
+		(
+			SELECT
+				r.id AS id ,
+				r.khjm AS khjm ,
+				r.khmc  AS khmc ,
+				r.flmzb AS flmzb ,
+				c.zjzzcs AS zjzzcs,
+				c.khfzb AS kfzbl,
+				c.pjdwyj  AS pjdwyj
+			FROM
+				rc_khzl r,rc_cwzb c
+			WHERE
+				r.del_flag = '0'  AND c.del_flag = '0'
+			&lt;!&ndash;<if test="khjm != null and khjm != ''">
+				AND r.khjm = #{khjm}
+			</if>&ndash;&gt;
+			<if test="khmc != null and khmc != ''">
+				AND  r.khmc LIKE CONCAT('%', #{khmc}, '%')
+			</if>
+		) t1
+		LEFT JOIN (
+				SELECT k.id, k.khzl_id, k.rzje FROM ke_rz k WHERE k.is_jq = 0 and k.del_flag = 0
+			) t2 ON t1.id = t2.khzl_id
+		RIGHT JOIN (
+			SELECT
+				c.daqu,
+			&lt;!&ndash;c.khjm,&ndash;&gt;
+				c.ckName,
+
+			<if test="yuefen != '' and yuefen != null ">
+				<if test="yuefen == '1'.toString()">
+					sum( CASE  WHEN ${yuefen} = 1 THEN 	c.yiyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '2'.toString()">
+					sum( CASE  WHEN ${yuefen} = 2 THEN  c.yiyue+c.eryue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '3'.toString()">
+					sum( CASE  WHEN ${yuefen} = 3 THEN c.yiyue+c.eryue+c.sanyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '4'.toString()">
+					sum( CASE  WHEN ${yuefen} = 4 THEN	c.yiyue+c.eryue+c.sanyue+c.siyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '5'.toString()">
+					sum( CASE  WHEN ${yuefen} = 5 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '6'.toString()">
+					sum( CASE  WHEN ${yuefen} = 6 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '7'.toString()">
+					sum( CASE  WHEN ${yuefen} = 7 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '8'.toString()">
+					sum( CASE  WHEN ${yuefen} = 8 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '9'.toString()">
+					sum( CASE  WHEN ${yuefen} = 9 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '10'.toString()">
+					sum( CASE  WHEN ${yuefen} = 10 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '11'.toString()">
+					sum( CASE  WHEN ${yuefen} = 11 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '12'.toString()">
+					sum( CASE  WHEN ${yuefen} = 12 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END ) AS ljxs,
+				</if>
+			</if>
+				sum( CASE  WHEN c.nianfen = (${nianfen}-3) THEN num ELSE 0 END ) AS dsyear,
+				sum( CASE  WHEN c.nianfen = (${nianfen}-2) THEN num ELSE 0 END ) AS deyear,
+				sum( CASE  WHEN c.nianfen = (${nianfen}-1) THEN num ELSE 0 END ) AS dyyear,
+				(
+					sum( CASE  WHEN c.nianfen = (${nianfen}-1) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = (${nianfen}-2) THEN num ELSE 0 END ) + sum( CASE  WHEN c.nianfen=(${nianfen}-3) THEN num ELSE 0 END )
+				) / 3 AS sanyear,
+		sum( CASE  WHEN c.nianfen = ${nianfen} THEN num ELSE 0 END ) AS dyear
+				FROM
+				c_custsale_tj c
+			<where>
+				and c.del_flag = '0'
+				<if test="tjName != null and tjName != ''">
+					AND  c.tjName = #{tjName}
+				</if>
+				<if test="khmc != null and khmc != ''">
+					AND  c.ckName LIKE CONCAT('%', #{khmc}, '%')
+				</if>
+			</where>
+				GROUP BY
+				c.daqu,
+			&lt;!&ndash;c.khjm,&ndash;&gt;
+				c.ckName
+			) t3 ON t1.khmc = t3.ckName
+		LEFT  JOIN (
+			SELECT
+			c.nianfen AS nianfen,
+			c.ckName AS ckName,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				c.yiyue AS ljys,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				c.yiyue+c.eryue AS ljys,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				c.yiyue+c.eryue+c.sanyue AS ljys,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue AS ljys,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue AS ljys,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue AS ljys,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue AS ljys,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue AS ljys,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue AS ljys,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue AS ljys,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue AS ljys,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue AS ljys,
+			</if>
+		</if>
+		c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue AS qnys
+			FROM c_cust_yusuan c
+				WHERE
+				c.nianfen = ${nianfen} AND  c.del_flag = '0'
+				<if test="khmc != null and khmc != ''">
+					AND  c.ckName LIKE CONCAT('%', #{khmc}, '%')
+				</if>
+
+			) t5 on t5.ckName = t1.khmc
+
+		) t4
+
+		<where>
+			<if test="sfhz != null and sfhz != '' ">
+				t4.sfhz = #{sfhz}
+			</if>
+		</where>
+		ORDER BY t4.dyear DESC,t4.sanyear DESC
+
+			&lt;!&ndash;<choose>
+				<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+					ORDER BY t4.sanyear DESC
+				</when>
+			</choose>&ndash;&gt;
+		</select>-->
+	<!-- 客户授信额度 -->
+		<select id="getSxedu" resultType="com.jeeplus.modules.xssj.entity.CSxeduTj" parameterType="com.jeeplus.modules.xssj.entity.CSxeduTj" >
+			SELECT t5.ckName AS khmc,t5.sfhz,${nianfen} AS nianfen,${yuefen} AS yuefen,t5.flmzb,t5.zjzzcs,t5.kfzbl,t5.dsyear,t5.deyear,t5.dyyear,t5.sanyear,
+				t5.dyear,t5.sxsxed,t5.sxxxed,t5.ljxs,t5.qntqljxs,t5.ljys,t5.qnys,t5.dcl,t5.qnjd FROM
+				(SELECT t4.ckName AS ckName ,
+					IF( t4.khmc IS NULL, 0, 1 ) AS sfhz,IFNULL( t4.flmzb, 100 ) / 100 AS flmzb,IFNULL( t4.zjzzcs, 6 ) AS zjzzcs,IFNULL( t4.khfzb, 60 ) / 100 AS kfzbl,
+				    t4.dsyear AS dsyear,t4.deyear AS deyear,t4.dyyear AS dyyear,t4.sanyear AS sanyear,t4.dyear AS dyear,
+				    ( t4.sanyear / IFNULL( t4.zjzzcs, 6 ) ) / (IFNULL( t4.flmzb, 100 ) / 100 ) * (IFNULL( t4.khfzb, 60 ) / 100 ) - IFNULL( t4.rzje, 0 ) AS sxsxed,
+				    ( t4.sanyear / IFNULL( t4.zjzzcs, 6 ) ) * (IFNULL( t4.khfzb, 60 ) / 100 ) - IFNULL( t4.rzje, 0 ) AS sxxxed,
+				t4.ljxs,t4.qntqljxs,t4.ljys * t4.pjdwyj AS ljys,t4.qnys * t4.pjdwyj AS qnys,t4.ljxs / ( t4.ljys * t4.pjdwyj ) AS dcl,t4.ljxs / ( t4.qnys * t4.pjdwyj ) AS qnjd
+				FROM (SELECT
+				t1.ckName AS ckName,t1.dsyear AS dsyear,t1.deyear AS deyear,t1.dyyear AS dyyear,t1.sanyear AS sanyear,t1.dyear AS dyear,t1.ljxs AS ljxs,t1.qntqljxs AS qntqljxs,t2.ljys AS ljys,t2.qnys AS qnys,t3.rzje AS rzje,t3.flmzb AS flmzb,t3.ckName AS khmc,
+				(SELECT c.zjzzcs AS zjzzcs FROM rc_cwzb c) AS zjzzcs,(SELECT c.khfzb AS khfzb FROM rc_cwzb c) AS khfzb,(SELECT c.pjdwyj AS pjdwyj FROM rc_cwzb c) AS pjdwyj
+				FROM (SELECT c.ckName,
+			<if test="yuefen != '' and yuefen != null and nianfen != null and nianfen != ''">
+				<if test="yuefen == '1'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue  ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '2'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '3'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '4'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '5'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '6'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '7'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '8'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '9'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '10'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '11'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END ) AS ljxs,
+				</if>
+				<if test="yuefen == '12'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen} THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue  ELSE 0 END ) AS ljxs,
+				</if>
+			</if>
+			<if test="yuefen != '' and yuefen != null and nianfen != null and nianfen != ''">
+				<if test="yuefen == '1'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue  ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '2'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '3'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '4'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '5'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '6'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '7'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '8'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '9'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '10'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '11'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END ) AS qntqljxs,
+				</if>
+				<if test="yuefen == '12'.toString()">
+					sum( CASE WHEN c.nianfen = ${nianfen}-1 THEN c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue  ELSE 0 END ) AS qntqljxs,
+				</if>
+			</if>
+					sum( CASE WHEN c.nianfen = ( 2018-3 ) THEN num ELSE 0 END ) AS dsyear,
+					sum( CASE WHEN c.nianfen = ( 2018-2 ) THEN num ELSE 0 END ) AS deyear,
+					sum( CASE WHEN c.nianfen = ( 2018-1 ) THEN num ELSE 0 END ) AS dyyear,
+					(
+					sum( CASE WHEN c.nianfen = ( 2018-1 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( 2018-2 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( 2018-3 ) THEN num ELSE 0 END )
+					) / 3 AS sanyear,
+				sum( CASE WHEN c.nianfen = 2018 THEN num ELSE 0 END ) AS dyear
+				FROM c_custsale_tj c
+			<where>
+				c.del_flag = '0'
+				<if test="tjName != null and tjName != ''">
+					AND c.tjName =  #{tjName}
+				</if>
+
+				<if test="khmc != null and khmc != ''">
+					AND  c.ckName LIKE CONCAT('%', #{khmc}, '%')
+				</if>
+			</where>
+
+				GROUP BY c.ckName ) t1
+				LEFT JOIN ( SELECT c.ckName,
+					<if test="yuefen != '' and yuefen != null ">
+						<if test="yuefen == '1'.toString()">
+							c.yiyue AS ljys,
+						</if>
+						<if test="yuefen == '2'.toString()">
+							c.yiyue+c.eryue AS ljys,
+						</if>
+						<if test="yuefen == '3'.toString()">
+							c.yiyue+c.eryue+c.sanyue AS ljys,
+						</if>
+						<if test="yuefen == '4'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue AS ljys,
+						</if>
+						<if test="yuefen == '5'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue AS ljys,
+						</if>
+						<if test="yuefen == '6'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue AS ljys,
+						</if>
+						<if test="yuefen == '7'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue AS ljys,
+						</if>
+						<if test="yuefen == '8'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue AS ljys,
+						</if>
+						<if test="yuefen == '9'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue AS ljys,
+						</if>
+						<if test="yuefen == '10'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue AS ljys,
+						</if>
+						<if test="yuefen == '11'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue AS ljys,
+						</if>
+						<if test="yuefen == '12'.toString()">
+							c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue AS ljys,
+						</if>
+					</if>
+					c.yiyue + c.eryue + c.sanyue + c.siyue + c.wuyue + c.liuyue + c.qiyue + c.bayue + c.jiuyue + c.shiyue + c.syyyue + c.seyyue AS qnys
+				FROM c_cust_yusuan c
+			<where>
+				 c.del_flag = '0'
+				<if test="nianfen != null and nianfen != ''">
+					AND c.nianfen =  #{nianfen}
+				</if>
+
+				<if test="khmc != null and khmc != ''">
+					AND  c.ckName LIKE CONCAT('%', #{khmc}, '%')
+				</if>
+			</where>
+				) t2 on t1.ckName = t2.ckName
+					left JOIN
+					(SELECT
+				r.id,r.khmc AS ckName,r.khjm,r.flmzb,k.rzje FROM  rc_khzl r left JOIN (
+				SELECT k.khzl_id,sum(k.rzje) AS rzje  FROM ke_rz k WHERE  k.is_jq = 0 GROUP BY k.khzl_id) k on r.id = k.khzl_id
+				<where>
+					<if test="khmc != null and khmc != ''">
+						AND  r.khmc LIKE CONCAT('%', #{khmc}, '%')
+					</if>
+				</where>
+				) t3  on t1.ckName = t3.ckName) t4 ) t5
+			<where>
+				<if test="sfhz != null and sfhz != ''">
+					 t5.sfhz =  #{sfhz}
+				</if>
+			</where>
+		</select>
+
+
+		<insert id="insertBatch" parameterType="java.util.List">
+			insert into c_custsale_tj (
+			id,
+			daqu,
+			khjm,
+			nianfen,
+
+			ckname,
+			tjname,
+			num,
+			yiyue,
+			eryue,
+			sanyue,
+			siyue,
+			wuyue,
+			liuyue,
+			qiyue,
+			bayue,
+			jiuyue,
+			shiyue,
+			syyyue,
+			seyyue,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag)
+			values
+			<foreach collection="list" item="item" index="index" separator="," >
+				(
+				#{item.id,jdbcType=VARCHAR},
+				#{item.daqu,jdbcType=VARCHAR},
+				#{item.khjm,jdbcType=VARCHAR},
+				#{item.nianfen,jdbcType=INTEGER},
+
+				#{item.ckname,jdbcType=VARCHAR},
+				#{item.tjname,jdbcType=INTEGER},
+				#{item.num,jdbcType=DOUBLE},
+				#{item.yiyue,jdbcType=DOUBLE},
+				#{item.eryue,jdbcType=DOUBLE},
+				#{item.sanyue,jdbcType=DOUBLE},
+				#{item.siyue,jdbcType=DOUBLE},
+				#{item.wuyue,jdbcType=DOUBLE},
+				#{item.liuyue,jdbcType=DOUBLE},
+				#{item.qiyue,jdbcType=DOUBLE},
+				#{item.bayue,jdbcType=DOUBLE},
+				#{item.jiuyue,jdbcType=DOUBLE},
+				#{item.shiyue,jdbcType=DOUBLE},
+				#{item.syyyue,jdbcType=DOUBLE},
+				#{item.seyyue,jdbcType=DOUBLE},
+				#{item.createBy.id,jdbcType=VARCHAR},
+				#{item.createDate,jdbcType=DATE},
+				#{item.updateBy.id,jdbcType=VARCHAR},
+				#{item.updateDate,jdbcType=DATE},
+				#{item.remarks,jdbcType=VARCHAR},
+				#{item.delFlag,jdbcType=VARCHAR}
+				)
+			</foreach>
+		</insert>
+
+
+	</mapper>

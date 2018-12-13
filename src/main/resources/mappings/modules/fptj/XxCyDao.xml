@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.fptj.dao.XxCyDao">
+    
+	<sql id="xxCyColumns">
+		a.id AS "id",
+		a.rzjg AS "rzjg",
+		a.skjbh AS "skjbh",
+		a.rzje AS "rzje",
+		a.jsplx AS "jsplx",
+		a.zhcqrq AS "zhcqrq",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="xxCyJoins">
+	</sql>
+
+
+	<select id="get" resultType="XxCy" >
+		SELECT
+			<include refid="xxCyColumns"/>
+		FROM xx_cy a
+		<include refid="xxCyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="XxCy" >
+		SELECT
+			<include refid="xxCyColumns"/>
+		FROM xx_cy a
+		<include refid="xxCyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="rzje != null and rzje != ''">
+				AND a.rzje LIKE
+					<if test="dbName == 'oracle'">'%'||#{rzje}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{rzje}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{rzje},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="XxCy" >
+		SELECT
+			<include refid="xxCyColumns"/>
+		FROM xx_cy a
+		<include refid="xxCyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO xx_cy(
+				id,
+				rzjg,
+				skjbh,
+				rzje,
+				jsplx,
+				zhcqrq,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{rzjg},
+			#{skjbh},
+			#{rzje},
+			#{jsplx},
+			#{zhcqrq},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE xx_cy SET 	
+					id = #{id},
+
+					rzjg = #{rzjg},
+
+					skjbh = #{skjbh},
+
+					rzje = #{rzje},
+
+					jsplx = #{jsplx},
+
+					zhcqrq = #{zhcqrq},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM xx_cy
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE xx_cy SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="XxCy" statementType="STATEMENT">
+		select * FROM xx_cy  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

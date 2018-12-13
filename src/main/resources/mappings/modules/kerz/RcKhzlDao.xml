@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.kerz.dao.RcKhzlDao">
+    
+	<sql id="rcKhzlColumns">
+		a.id AS "id",
+		a.khjm AS "khjm",
+		a.khmc AS "khmc",
+		a.flmzb AS "flmzb",
+		a.guojia AS "guojia",
+		a.sf AS "sf",
+		a.city AS "city",
+		a.khdz AS "khdz",
+		a.zjzzcs AS "zjzzcs",
+
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="rcGdColumns">
+		b.id AS "rcGdList.id",
+		b.khzl_id AS "rcGdList.a.id",
+		b.khlx AS "rcGdList.khlx",
+		b.zgb AS "rcGdList.zgb",
+		b.gdxm AS "rcGdList.gdxm",
+		b.sfzh AS "rcGdList.sfzh",
+		b.xb AS "rcGdList.xb",
+		b.nl AS "rcGdList.nl",
+		b.is_dbr AS "rcGdList.isDbr",
+		b.jtcy AS "rcGdList.jtcy",
+		b.create_by AS "rcGdList.createBy.id",
+		b.create_date AS "rcGdList.createDate",
+		b.update_by AS "rcGdList.updateBy.id",
+		b.update_date AS "rcGdList.updateDate",
+		b.remarks AS "rcGdList.remarks",
+		b.del_flag AS "rcGdList.delFlag"
+	</sql>
+
+	<sql id="rcKhzlJoins">
+		LEFT JOIN rc_gd b ON b.khzl_id = a.id
+	</sql>
+
+
+	<select id="get" resultType="RcKhzl" >
+		SELECT
+			<include refid="rcKhzlColumns"/>
+		FROM rc_khzl a
+		<!--<include refid="rcKhzlJoins"/>-->
+		WHERE a.id = #{id} OR a.khjm = #{khjm} OR a.khmc = #{khmc}
+	</select>
+
+	<select id="getMaxKhjm" resultType="RcKhzl" >
+		SELECT
+		 MAX(a.khjm) AS "khjm"
+		FROM rc_khzl a
+	</select>
+
+	<select id="getGdxm" resultType="RcKhzl" >
+		SELECT DISTINCT r.id,r.khmc FROM rc_khzl r
+	</select>
+
+	<select id="findList" resultType="RcKhzl" >
+		SELECT
+			<include refid="rcKhzlColumns"/>
+		FROM rc_khzl a
+		<!--<include refid="rcKhzlJoins"/>-->
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="khjm != null and khjm != ''">
+				AND a.khjm = #{khjm}
+			</if>
+			<if test="khmc != null and khmc != ''">
+				AND a.khmc = #{khmc}
+			</if>
+			<!--<if test="flmzb != null and flmzb != ''">-->
+				<!--AND a.flmzb = #{flmzb}-->
+			<!--</if>-->
+			<if test="guojia != null and guojia != ''">
+				AND a.guojia = #{guojia}
+			</if>
+			<if test="sf != null and sf != ''">
+				AND a.sf = #{sf}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="khdz != null and khdz != ''">
+				AND a.khdz = #{khdz}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RcKhzl" >
+		SELECT
+			<include refid="rcKhzlColumns"/>
+		FROM rc_khzl a
+		<include refid="rcKhzlJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rc_khzl(
+				id,
+				khjm,
+				khmc,
+				flmzb,
+				guojia,
+				sf,
+				city,
+				khdz,
+				zjzzcs,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{khjm},
+			#{khmc},
+			#{flmzb},
+			#{guojia},
+			#{sf},
+			#{city},
+			#{khdz},
+
+			#{zjzzcs},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rc_khzl SET 	
+					id = #{id},
+
+					khjm = #{khjm},
+
+					khmc = #{khmc},
+
+					flmzb = #{flmzb},
+
+					guojia = #{guojia},
+
+					sf = #{sf},
+
+					city = #{city},
+
+					khdz = #{khdz},
+
+					zjzzcs = #{zjzzcs},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM rc_khzl
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE rc_khzl SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RcKhzl" statementType="STATEMENT">
+		select * FROM rc_khzl  where ${propertyName} = '${value}'
+	</select>
+
+	<!-- 统计每个城市的客户分布情况 -->
+	<select id="getCityNum" resultType="java.util.Map">
+		SELECT IFNULL(TRIM(r.city),'0') AS name ,count(r.city) AS value FROM rc_khzl r WHERE  r.del_flag = 0 GROUP BY r.city;
+	</select>
+
+
+
+
+
+
+	<select id="getGdjg" resultType="com.jeeplus.modules.kerz.entity.Gdfxtj" parameterType="com.jeeplus.modules.kerz.entity.Gdfxtj" >
+		SELECT
+		z.id AS 'id',
+		z.khjm AS 'khjm',
+		z.khmc AS 'khmc',
+		t.heji AS 'heji',
+		t.gd AS 'gd',
+		t.sjkgr AS 'sjkgr',
+		t.dbr AS 'dbr',
+		t.n AS 'n',
+		t.nv AS 'nv',
+		t.sb AS 'sb',
+		t.ss AS 'ss',
+		t.ts AS 'ts',
+		t.ls AS 'ls'
+		FROM
+		(SELECT
+			k.id,k.khmc,k.khjm
+			FROM rc_khzl k WHERE k.del_flag ='0'
+
+			<if test="khjm != null and khjm != ''">
+				and k.khjm = #{khjm}
+			</if>
+			<if test="khmc != null and khmc != ''">
+				and k.khmc LIKE  CONCAT('%',#{khmc},'%')
+			</if>
+		) z
+		LEFT JOIN
+		(SELECT r.khzl_id,count(r.khzl_id) AS heji,
+		sum(case when r.khlx=1 THEN 1 ELSE 0 END) AS gd,
+		sum(case when r.khlx=2 THEN 1 ELSE 0 END) AS sjkgr,
+		sum(case when r.khlx=3 THEN 1 ELSE 0 END) AS dbr,
+		sum(case when r.xb=0 THEN 1 ELSE 0 END) AS n,
+		sum(case when r.xb=1 THEN 1 ELSE 0 END) AS nv,
+
+		sum(case when (r.nl BETWEEN 0 and 18)  THEN 1 ELSE 0 END) AS sb,
+		sum(case when (r.nl BETWEEN 18 and 30) THEN 1 ELSE 0 END) AS ss,
+		sum(case when (r.nl BETWEEN 30 and 50) THEN 1 ELSE 0 END) AS ts,
+		sum(case when (r.nl BETWEEN 50 and 999) THEN 1 ELSE 0 END) AS ls
+
+		FROM rc_gd r WHERE r.del_flag ='0' and r.parent_id !='0' GROUP BY r.khzl_id ) t on t.khzl_id = z.id
+
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY t.heji DESC, z.khjm DESC
+			</when>
+		</choose>
+
+	</select>
+
+	<!-- 公司名称 -->
+	<select id="getAllRcKhzl"  resultType="RcKhzl">
+		SELECT
+			<include refid="rcKhzlColumns"/>
+		FROM rc_khzl a
+		WHERE a.del_flag = '0'
+		<if test="khmc != null and khmc != '' ">
+			and a.khmc = #{khmc}
+		</if>
+	</select>
+</mapper>

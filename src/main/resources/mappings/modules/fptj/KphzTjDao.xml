@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.fptj.dao.KphzTjDao">
+    
+	<sql id="kphzTjColumns">
+		a.id AS "id",
+		a.tjxm AS "tjxm",
+		a.yqsl AS "yqsl",
+		a.yysl AS "yysl",
+		a.liusl AS "liusl",
+		a.lingsl AS "lingsl",
+		a.kprq AS "kprq",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="kphzTjJoins">
+	</sql>
+
+
+	<select id="get" resultType="KphzTj" >
+		SELECT
+			<include refid="kphzTjColumns"/>
+		FROM kphz_tj a
+		<include refid="kphzTjJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="KphzTj" >
+		SELECT
+			<include refid="kphzTjColumns"/>
+		FROM kphz_tj a
+		<include refid="kphzTjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="tjxm != null and tjxm != ''">
+				AND a.tjxm LIKE
+					<if test="dbName == 'oracle'">'%'||#{tjxm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{tjxm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{tjxm},'%')</if>
+			</if>
+			<if test="beginKprq != null and endKprq != null and beginKprq != '' and endKprq != ''">
+				AND a.kprq BETWEEN #{beginKprq} AND #{endKprq}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="KphzTj" >
+		SELECT
+			<include refid="kphzTjColumns"/>
+		FROM kphz_tj a
+		<include refid="kphzTjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO kphz_tj(
+				id,
+				tjxm,
+				yqsl,
+				yysl,
+				liusl,
+				lingsl,
+				kprq,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{tjxm},
+			#{yqsl},
+			#{yysl},
+			#{liusl},
+			#{lingsl},
+			#{kprq},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE kphz_tj SET 	
+					id = #{id},
+
+					tjxm = #{tjxm},
+
+					yqsl = #{yqsl},
+
+					yysl = #{yysl},
+
+					liusl = #{liusl},
+
+					lingsl = #{lingsl},
+
+					kprq = #{kprq},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM kphz_tj
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE kphz_tj SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="KphzTj" statementType="STATEMENT">
+		select * FROM kphz_tj  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

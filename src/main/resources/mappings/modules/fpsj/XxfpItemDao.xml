@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.fpsj.dao.XxfpItemDao">
+    
+	<sql id="xxfpItemColumns">
+		a.id AS "id",
+		a.xxfp_head_id AS "xxfpHeadId",
+		a.fphm AS "fphm",
+		a.mxxh AS "mxxh",
+		a.cpmc AS "cpmc",
+		a.cpxh AS "cpxh",
+		a.cpdw AS "cpdw",
+		a.cpsl AS "cpsl",
+		a.cpdj AS "cpdj",
+		a.bhsje AS "bhsje",
+		a.sl AS "sl",
+		a.se AS "se",
+		a.hsje AS "hsje",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="xxfpItemJoins">
+	</sql>
+
+
+	<select id="get" resultType="XxfpItem" >
+		SELECT
+			<include refid="xxfpItemColumns"/>
+		FROM xxfp_item a
+		<include refid="xxfpItemJoins"/>
+		WHERE a.id = #{id} OR (a.xxfp_head_id = #{xxfpHead.id} AND a.mxxh = #{mxxh} )
+	</select>
+
+	<select id="findList" resultType="XxfpItem" >
+		SELECT
+			<include refid="xxfpItemColumns"/>
+		FROM xxfp_item a
+		<include refid="xxfpItemJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}  AND a.xxfp_head_id = #{xxfpHead.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="XxfpItem" >
+		SELECT
+			<include refid="xxfpItemColumns"/>
+		FROM xxfp_item a
+		<include refid="xxfpItemJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}  AND a.xxfp_head_id = #{xxfpHead.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO xxfp_item(
+				id,
+				xxfp_head_id,
+				fphm,
+				mxxh,
+				cpmc,
+				cpxh,
+				cpdw,
+				cpsl,
+				cpdj,
+				bhsje,
+				sl,
+				se,
+				hsje,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{xxfpHead.id},
+			#{fphm},
+			#{mxxh},
+			#{cpmc},
+			#{cpxh},
+			#{cpdw},
+			#{cpsl},
+			#{cpdj},
+			#{bhsje},
+			#{sl},
+			#{se},
+			#{hsje},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE xxfp_item SET 	
+					id = #{id},
+
+					xxfp_head_id = #{xxfpHead.id},
+
+					fphm = #{fphm},
+
+					mxxh = #{mxxh},
+
+					cpmc = #{cpmc},
+
+					cpxh = #{cpxh},
+
+					cpdw = #{cpdw},
+
+					cpsl = #{cpsl},
+
+					cpdj = #{cpdj},
+
+					bhsje = #{bhsje},
+
+					sl = #{sl},
+
+					se = #{se},
+
+					hsje = #{hsje},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM xxfp_item
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE xxfp_item SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="XxfpItem" statementType="STATEMENT">
+		select * FROM xxfp_item  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

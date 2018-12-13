@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.yusuan.dao.CCustYusuanDao">
+    
+	<sql id="cCustYusuanColumns">
+		a.id AS "id",
+		a.nianfen AS "nianfen",
+		a.ckname AS "ckname",
+		a.num AS "num",
+		a.yiyue AS "yiyue",
+		a.eryue AS "eryue",
+		a.sanyue AS "sanyue",
+		a.siyue AS "siyue",
+		a.wuyue AS "wuyue",
+		a.liuyue AS "liuyue",
+		a.qiyue AS "qiyue",
+		a.bayue AS "bayue",
+		a.jiuyue AS "jiuyue",
+		a.shiyue AS "shiyue",
+		a.syyyue AS "syyyue",
+		a.seyyue AS "seyyue",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="cCustYusuanJoins">
+	</sql>
+
+
+	<select id="get" resultType="CCustYusuan" >
+		SELECT
+			<include refid="cCustYusuanColumns"/>
+		FROM c_cust_yusuan a
+		<include refid="cCustYusuanJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="CCustYusuan" >
+		SELECT
+			<include refid="cCustYusuanColumns"/>
+		FROM c_cust_yusuan a
+		<include refid="cCustYusuanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="nianfen != null and nianfen != ''">
+				AND a.nianfen = #{nianfen}
+			</if>
+			<if test="ckname != null and ckname != ''">
+				AND a.ckname LIKE
+					<if test="dbName == 'oracle'">'%'||#{ckname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{ckname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{ckname},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="CCustYusuan" >
+		SELECT
+			<include refid="cCustYusuanColumns"/>
+		FROM c_cust_yusuan a
+		<include refid="cCustYusuanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO c_cust_yusuan(
+				id,
+				nianfen,
+				ckname,
+				num,
+				yiyue,
+				eryue,
+				sanyue,
+				siyue,
+				wuyue,
+				liuyue,
+				qiyue,
+				bayue,
+				jiuyue,
+				shiyue,
+				syyyue,
+				seyyue,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{nianfen},
+			#{ckname},
+			#{num},
+			#{yiyue},
+			#{eryue},
+			#{sanyue},
+			#{siyue},
+			#{wuyue},
+			#{liuyue},
+			#{qiyue},
+			#{bayue},
+			#{jiuyue},
+			#{shiyue},
+			#{syyyue},
+			#{seyyue},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE c_cust_yusuan SET 	
+					id = #{id},
+
+					nianfen = #{nianfen},
+
+					ckname = #{ckname},
+
+					num = #{num},
+
+					yiyue = #{yiyue},
+
+					eryue = #{eryue},
+
+					sanyue = #{sanyue},
+
+					siyue = #{siyue},
+
+					wuyue = #{wuyue},
+
+					liuyue = #{liuyue},
+
+					qiyue = #{qiyue},
+
+					bayue = #{bayue},
+
+					jiuyue = #{jiuyue},
+
+					shiyue = #{shiyue},
+
+					syyyue = #{syyyue},
+
+					seyyue = #{seyyue},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM c_cust_yusuan
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE c_cust_yusuan SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CCustYusuan" statementType="STATEMENT">
+		select * FROM c_cust_yusuan  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

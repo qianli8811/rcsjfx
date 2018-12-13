@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cwzb.dao.RcCwzbDao">
+    
+	<sql id="rcCwzbColumns">
+		a.id AS "id",
+		a.zjzzcs AS "zjzzcs",
+		a.khfzb AS "khfzb",
+		a.pjdwyj AS "pjdwyj",
+
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="rcCwzbJoins">
+	</sql>
+
+
+	<select id="get" resultType="RcCwzb" >
+		SELECT
+			<include refid="rcCwzbColumns"/>
+		FROM rc_cwzb a
+		<include refid="rcCwzbJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RcCwzb" >
+		SELECT
+			<include refid="rcCwzbColumns"/>
+		FROM rc_cwzb a
+		<include refid="rcCwzbJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RcCwzb" >
+		SELECT
+			<include refid="rcCwzbColumns"/>
+		FROM rc_cwzb a
+		<include refid="rcCwzbJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rc_cwzb(
+				id,
+				zjzzcs,
+				khfzb,
+				pjdwyj,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{zjzzcs},
+			#{khfzb},
+			#{pjdwyj},
+
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rc_cwzb SET 	
+					id = #{id},
+
+					zjzzcs = #{zjzzcs},
+
+					khfzb = #{khfzb},
+
+					pjdwyj = #{pjdwyj},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM rc_cwzb
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE rc_cwzb SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RcCwzb" statementType="STATEMENT">
+		select * FROM rc_cwzb  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.fpsj.dao.JxfpHeadDao">
+    
+	<sql id="jxfpHeadColumns">
+		a.id AS "id",
+		a.fpdm AS "fpdm",
+		a.fphm AS "fphm",
+		a.rzbz AS "rzbz",
+		a.rzssy AS "rzssy",
+		a.fpzf AS "fpzf",
+		a.kplx AS "kplx",
+		a.gmfmc AS "gmfmc",
+		a.gmfsh AS "gmfsh",
+		a.gmfdz AS "gmfdz",
+		a.gmfyhzh AS "gmfyhzh",
+		a.hjbhsje AS "hjbhsje",
+		a.hjhsje AS "hjhsje",
+		a.hjse AS "hjse",
+		a.kprq AS "kprq",
+
+		a.xsfmc AS "xsfmc",
+		a.xsfsh AS "xsfsh",
+		a.xsfdz AS "xsfdz",
+		a.xsyhzh AS "xsyhzh",
+		a.bz AS "bz",
+		a.is_update AS "isUpdate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="jxfpHeadJoins">
+	</sql>
+
+
+	<select id="get" resultType="JxfpHead" >
+		SELECT
+			<include refid="jxfpHeadColumns"/>
+		FROM jxfp_head a
+		<include refid="jxfpHeadJoins"/>
+		WHERE a.id = #{id} OR (a.fphm = #{fphm} AND a.fpdm = #{fpdm})
+	</select>
+
+	<select id="findList" resultType="JxfpHead" >
+		SELECT
+			<include refid="jxfpHeadColumns"/>
+		FROM jxfp_head a
+		<include refid="jxfpHeadJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="fpdm != null and fpdm != ''">
+				AND a.fpdm = #{fpdm}
+			</if>
+			<if test="fphm != null and fphm != ''">
+				AND a.fphm LIKE concat('%',#{fphm},'%')
+			</if>
+			<if test="beginRzssy != null and endRzssy != null and beginRzssy != '' and endRzssy != ''">
+				AND a.rzssy BETWEEN #{beginRzssy} AND #{endRzssy}
+			</if>
+
+			<if test="rzbz != null and rzbz != ''">
+				<if test="rzbz == 1">
+					AND a.rzbz = 1
+				</if>
+				<if test="rzbz == -1">
+					AND a.rzbz != 1
+				</if>
+			</if>
+
+
+
+			<if test="gmfmc != null and gmfmc != ''">
+
+				AND ( a.gmfmc LIKE   CONCAT('%',#{gmfmc},'%') OR #{gmfmc} LIKE CONCAT( '%',a.gmfmc, '%' ) )
+
+			</if>
+
+
+			<if test="beginKprq != null and endKprq != null and beginKprq != '' and endKprq != ''">
+				AND a.kprq BETWEEN #{beginKprq} AND #{endKprq}
+			</if>
+			<if test="xsfmc != null and xsfmc != ''">
+				AND a.xsfmc LIKE   CONCAT('%',#{xsfmc},'%')
+			</if>
+
+			<if test="beginJlrq != null and endJlrq != null and beginJlrq != '' and endJlrq != ''">
+				AND a.update_date BETWEEN #{beginJlrq} AND #{endJlrq}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.xzrq DESC,a.hjhsje DESC,a.kprq DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="JxfpHead" >
+		SELECT
+			<include refid="jxfpHeadColumns"/>
+		FROM jxfp_head a
+		<include refid="jxfpHeadJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.kprq DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jxfp_head(
+				id,
+				fpdm,
+				fphm,
+				rzbz,
+				rzssy,
+
+				fpzf,
+				kplx,
+				gmfmc,
+				gmfsh,
+				gmfdz,
+				gmfyhzh,
+				hjbhsje,
+				hjhsje,
+				hjse,
+				kprq,
+
+				xsfmc,
+				xsfsh,
+				xsfdz,
+				xsyhzh,
+				bz,
+				is_update,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{fpdm},
+			#{fphm},
+			#{rzbz},
+			#{rzssy},
+
+			#{fpzf},
+			#{kplx},
+			#{gmfmc},
+			#{gmfsh},
+			#{gmfdz},
+			#{gmfyhzh},
+			#{hjbhsje},
+			#{hjhsje},
+			#{hjse},
+			#{kprq},
+
+			#{xsfmc},
+			#{xsfsh},
+			#{xsfdz},
+			#{xsyhzh},
+			#{bz},
+			#{isUpdate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jxfp_head SET 	
+					id = #{id},
+
+					fpdm = #{fpdm},
+
+					fphm = #{fphm},
+					rzbz =	#{rzbz},
+					rzssy =	#{rzssy},
+
+
+					fpzf = #{fpzf},
+
+					kplx = #{kplx},
+
+					gmfmc = #{gmfmc},
+
+					gmfsh = #{gmfsh},
+
+					gmfdz = #{gmfdz},
+
+					gmfyhzh = #{gmfyhzh},
+
+					hjbhsje = #{hjbhsje},
+
+					hjhsje = #{hjhsje},
+
+					hjse = #{hjse},
+
+					kprq = #{kprq},
+
+
+
+					xsfmc = #{xsfmc},
+
+					xsfsh = #{xsfsh},
+
+					xsfdz = #{xsfdz},
+
+					xsyhzh = #{xsyhzh},
+
+					bz = #{bz},
+
+					is_update = #{isUpdate},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM jxfp_head
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE jxfp_head SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="JxfpHead" statementType="STATEMENT">
+		select * FROM jxfp_head  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!-- 获取进项数据公司名称 -->
+	<select id="getJxGsName"  resultType="String">
+		SELECT DISTINCT j.gmfmc FROM jxfp_head j WHERE j.del_flag = '0';
+	</select>
+
+	<select id="getKptj" resultType="com.jeeplus.modules.xssj.entity.CCustsaleTj" parameterType="com.jeeplus.modules.xssj.entity.CCustsaleTj">
+		SELECT
+		j.xsfmc AS ckName,
+		sum(j.hjhsje) AS num,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 01 THEN j.hjhsje ELSE 0 END ) AS yiyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 02 THEN j.hjhsje ELSE 0 END ) AS eryue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 03 THEN j.hjhsje ELSE 0 END ) AS sanyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 04 THEN j.hjhsje ELSE 0 END ) AS siyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 05 THEN j.hjhsje ELSE 0 END ) AS wuyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 06 THEN j.hjhsje ELSE 0 END ) AS liuyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 07 THEN j.hjhsje ELSE 0 END ) AS qiyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 08 THEN j.hjhsje ELSE 0 END ) AS bayue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 09 THEN j.hjhsje ELSE 0 END ) AS jiuyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 10 THEN j.hjhsje ELSE 0 END ) AS shiyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 11 THEN j.hjhsje ELSE 0 END ) AS syyyue,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN 12 THEN j.hjhsje ELSE 0 END ) AS seyyue
+		FROM
+		jxfp_head j
+		<where>
+			<if test="ckname != '' and ckname != null ">
+				j.xsfmc = #{ckname}
+			</if>
+			<if test="nianfen != '' and nianfen != null and yuefen !='' and yuefen != null">
+				AND j.kprq >= #{nianfen}
+			</if>
+		</where>
+		GROUP BY j.xsfmc
+	</select>
+
+	<select id="getGysKptjqnjnby" resultType="java.util.Map" parameterType="com.jeeplus.modules.xssj.entity.CCustsaleTj">
+		SELECT
+		j.xsfmc AS ckName,
+		sum(CASE DATE_FORMAT(j.kprq,'%y') WHEN ${nianfen-1} THEN j.hjhsje ELSE 0 END ) AS qunian,
+		sum(CASE DATE_FORMAT(j.kprq,'%y') WHEN ${nianfen} THEN j.hjhsje ELSE 0 END ) AS bennian,
+		sum(CASE DATE_FORMAT(j.kprq,'%m') WHEN CONCAT('"',${nianfen},'-',${yuefen},'"') THEN j.hjhsje ELSE 0 END ) AS benyue
+		FROM
+		jxfp_head j
+		GROUP BY j.xsfmc ORDER BY benyue DESC limit 10
+	</select>
+
+</mapper>

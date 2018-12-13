@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.xssj.dao.CCustSaleDao">
+    
+	<sql id="cCustSaleColumns">
+		a.id AS "id",
+		a.gongchang AS "gongchang",
+		a.daqu AS "daqu",
+		a.chengshi AS "chengshi",
+		a.yewuyuan AS "yewuyuan",
+		a.cust_no AS "custNo",
+		a.cust_name AS "custName",
+		a.dapinleimiaoshu AS "dapinleimiaoshu",
+		a.yijipinleimiaoshu AS "yijipinleimiaoshu",
+		a.erjipinleimiaoshu AS "erjipinleimiaoshu",
+		a.sanjipinleimiaoshu AS "sanjipinleimiaoshu",
+		a.chanpinxianmiaoshu AS "chanpinxianmiaoshu",
+		a.wuliaobianma AS "wuliaobianma",
+		a.wuliaomiaoshu AS "wuliaomiaoshu",
+		a.xiang AS "xiang",
+		a.dun AS "dun",
+		a.xiaoshoushouru AS "xiaoshoushouru",
+		a.jingzhi AS "jingzhi",
+		a.shuie AS "shuie",
+		a.zhanlvjine AS "zhanlvjine",
+		a.zhekoujine AS "zhekoujine",
+		a.zhekoubili AS "zhekoubili",
+		a.shoudafangjiancheng AS "shoudafangjiancheng",
+		a.fapiaoshiqi AS "fapiaoshiqi",
+		a.dingdanbianhao AS "dingdanbianhao",
+		a.danjuriqi AS "danjuriqi",
+		a.kucundidian AS "kucundidian",
+		a.caigoubianhao AS "caigoubianhao",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="cCustSaleJoins">
+	</sql>
+
+
+	<select id="get" resultType="CCustSale" >
+		SELECT
+			<include refid="cCustSaleColumns"/>
+		FROM ${tableName} a
+		<include refid="cCustSaleJoins"/>
+		WHERE a.id = #{id} OR (a.dingdanbianhao = #{dingdanbianhao} AND a.fapiaoshiqi = #{fapiaoshiqi} AND a.wuliaobianma = #{wuliaobianma} AND a.zhanlvjine = #{zhanlvjine} )
+	</select>
+
+	<select id="findList" resultType="CCustSale" fetchSize="1000">
+		SELECT
+			<include refid="cCustSaleColumns"/>
+		FROM ${tableName} a
+		<include refid="cCustSaleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="custName != null and custName != ''">
+				AND a.cust_name LIKE
+					<if test="dbName == 'oracle'">'%'||#{custName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{custName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{custName},'%')</if>
+			</if>
+			<if test="beginFapiaoshiqi != null and endFapiaoshiqi != null and beginFapiaoshiqi != '' and endFapiaoshiqi != ''">
+				AND a.fapiaoshiqi BETWEEN #{beginFapiaoshiqi} AND #{endFapiaoshiqi}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} limit ((pageNo-1)*pageSize),pageSize
+			</when>
+			<otherwise>
+				ORDER BY  a.fapiaoshiqi DESC,a.danjuriqi DESC
+			</otherwise>
+
+		</choose>
+
+	</select>
+
+	<select id="findAllList" resultType="CCustSale" >
+		SELECT
+			<include refid="cCustSaleColumns"/>
+		FROM ${tableName} a
+		<include refid="cCustSaleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="custName != null and custName != ''">
+				AND a.cust_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{custName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{custName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{custName},'%')</if>
+			</if>
+			<if test="beginFapiaoshiqi != null and endFapiaoshiqi != null and beginFapiaoshiqi != '' and endFapiaoshiqi != ''">
+				AND a.fapiaoshiqi BETWEEN #{beginFapiaoshiqi} AND #{endFapiaoshiqi}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY  a.fapiaoshiqi DESC,a.danjuriqi DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ${tableName} (
+				id,
+				gongchang,
+				daqu,
+				chengshi,
+				yewuyuan,
+				cust_no,
+				cust_name,
+				dapinleimiaoshu,
+				yijipinleimiaoshu,
+				erjipinleimiaoshu,
+				sanjipinleimiaoshu,
+				chanpinxianmiaoshu,
+				wuliaobianma,
+				wuliaomiaoshu,
+				xiang,
+				dun,
+				xiaoshoushouru,
+				jingzhi,
+				shuie,
+				zhanlvjine,
+				zhekoujine,
+				zhekoubili,
+				shoudafangjiancheng,
+				fapiaoshiqi,
+				dingdanbianhao,
+				danjuriqi,
+				kucundidian,
+				caigoubianhao,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{gongchang},
+			#{daqu},
+			#{chengshi},
+			#{yewuyuan},
+			#{custNo},
+			#{custName},
+			#{dapinleimiaoshu},
+			#{yijipinleimiaoshu},
+			#{erjipinleimiaoshu},
+			#{sanjipinleimiaoshu},
+			#{chanpinxianmiaoshu},
+			#{wuliaobianma},
+			#{wuliaomiaoshu},
+			#{xiang},
+			#{dun},
+			#{xiaoshoushouru},
+			#{jingzhi},
+			#{shuie},
+			#{zhanlvjine},
+			#{zhekoujine},
+			#{zhekoubili},
+			#{shoudafangjiancheng},
+			#{fapiaoshiqi},
+			#{dingdanbianhao},
+			#{danjuriqi},
+			#{kucundidian},
+			#{caigoubianhao},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ${tableName} SET
+					id = #{id},
+
+					gongchang = #{gongchang},
+
+					daqu = #{daqu},
+
+					chengshi = #{chengshi},
+
+					yewuyuan = #{yewuyuan},
+
+					cust_no = #{custNo},
+
+					cust_name = #{custName},
+
+					dapinleimiaoshu = #{dapinleimiaoshu},
+
+					yijipinleimiaoshu = #{yijipinleimiaoshu},
+
+					erjipinleimiaoshu = #{erjipinleimiaoshu},
+
+					sanjipinleimiaoshu = #{sanjipinleimiaoshu},
+
+					chanpinxianmiaoshu = #{chanpinxianmiaoshu},
+
+					wuliaobianma = #{wuliaobianma},
+
+					wuliaomiaoshu = #{wuliaomiaoshu},
+
+					xiang = #{xiang},
+
+					dun = #{dun},
+
+					xiaoshoushouru = #{xiaoshoushouru},
+
+					jingzhi = #{jingzhi},
+
+					shuie = #{shuie},
+
+					zhanlvjine = #{zhanlvjine},
+
+					zhekoujine = #{zhekoujine},
+
+					zhekoubili = #{zhekoubili},
+
+					shoudafangjiancheng = #{shoudafangjiancheng},
+
+					fapiaoshiqi = #{fapiaoshiqi},
+
+					dingdanbianhao = #{dingdanbianhao},
+
+					danjuriqi = #{danjuriqi},
+
+					kucundidian = #{kucundidian},
+
+					caigoubianhao = #{caigoubianhao},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM ${tableName}
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE ${tableName} SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CCustSale" statementType="STATEMENT">
+		select * FROM ${tableName}  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="getXssjtj" resultType="com.jeeplus.modules.xssj.entity.CCustsaleTj" parameterType="com.jeeplus.modules.xssj.entity.CCustsaleTj" >
+		SELECT
+		c.cust_name as "ckname",
+		DATE_FORMAT( c.fapiaoshiqi, '%Y' ) AS nianfen,
+		<if test="tjname != null and tjname != '' ">
+			<if test="tjname == '1'.toString() ">
+				1 AS 'tjname',
+				sum(xiaoshoushouru) numyi,
+				sum(if(MONTH(c.fapiaoshiqi) = 1,xiaoshoushouru,"")) as 'yiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 2,xiaoshoushouru,"")) as 'eryue',
+				sum(if(MONTH(c.fapiaoshiqi) = 3,xiaoshoushouru,"")) as 'sanyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 4,xiaoshoushouru,"")) as 'siyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 5,xiaoshoushouru,"")) as 'wuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 6,xiaoshoushouru,"")) as 'liuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 7,xiaoshoushouru,"")) as 'qiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 8,xiaoshoushouru,"")) as 'bayue',
+				sum(if(MONTH(c.fapiaoshiqi) = 9,xiaoshoushouru,"")) as 'jiuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 10,xiaoshoushouru,"")) as 'shiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 11,xiaoshoushouru,"")) as 'syyyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 12,xiaoshoushouru,"")) as 'seyyue'
+			</if>
+			<if test="tjname == '2'.toString() ">
+				2 AS 'tjname',
+				sum(jingzhi) numer,
+				sum(if(MONTH(c.fapiaoshiqi) = 1,jingzhi,"")) as 'yiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 2,jingzhi,"")) as 'eryue',
+				sum(if(MONTH(c.fapiaoshiqi) = 3,jingzhi,"")) as 'sanyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 4,jingzhi,"")) as 'siyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 5,jingzhi,"")) as 'wuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 6,jingzhi,"")) as 'liuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 7,jingzhi,"")) as 'qiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 8,jingzhi,"")) as 'bayue',
+				sum(if(MONTH(c.fapiaoshiqi) = 9,jingzhi,"")) as 'jiuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 10,jingzhi,"")) as 'shiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 11,jingzhi,"")) as 'syyyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 12,jingzhi,"")) as 'seyyue'
+			</if>
+			<if test="tjname == '3'.toString() ">
+				3 AS 'tjname',
+				sum(shuie) numsan,
+				sum(if(MONTH(c.fapiaoshiqi) = 1,shuie,"")) as 'yiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 2,shuie,"")) as 'eryue',
+				sum(if(MONTH(c.fapiaoshiqi) = 3,shuie,"")) as 'sanyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 4,shuie,"")) as 'siyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 5,shuie,"")) as 'wuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 6,shuie,"")) as 'liuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 7,shuie,"")) as 'qiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 8,shuie,"")) as 'bayue',
+				sum(if(MONTH(c.fapiaoshiqi) = 9,shuie,"")) as 'jiuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 10,shuie,"")) as 'shiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 11,shuie,"")) as 'syyyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 12,shuie,"")) as 'seyyue'
+			</if>
+			<if test="tjname == '4'.toString() ">
+				4 AS 'tjname',
+				sum(zhanlvjine) numsan,
+				sum(if(MONTH(c.fapiaoshiqi) = 1,zhanlvjine,"")) as 'yiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 2,zhanlvjine,"")) as 'eryue',
+				sum(if(MONTH(c.fapiaoshiqi) = 3,zhanlvjine,"")) as 'sanyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 4,zhanlvjine,"")) as 'siyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 5,zhanlvjine,"")) as 'wuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 6,zhanlvjine,"")) as 'liuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 7,zhanlvjine,"")) as 'qiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 8,zhanlvjine,"")) as 'bayue',
+				sum(if(MONTH(c.fapiaoshiqi) = 9,zhanlvjine,"")) as 'jiuyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 10,zhanlvjine,"")) as 'shiyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 11,zhanlvjine,"")) as 'syyyue',
+				sum(if(MONTH(c.fapiaoshiqi) = 12,zhanlvjine,"")) as 'seyyue'
+			</if>
+		</if>
+		FROM
+		${tableName} c
+		WHERE
+		c.del_flag = '0'
+		<if test="ckname != null and ckname != '' ">
+			AND c.cust_name LIKE concat('%',#{ckname},'%')
+		</if>
+		<if test="beginNianfen != null and endNianfen != null and beginNianfen != '' and endNianfen != ''">
+			AND UNIX_TIMESTAMP(c.fapiaoshiqi) BETWEEN UNIX_TIMESTAMP(#{beginNianfen}) AND UNIX_TIMESTAMP(#{endNianfen})
+		</if>
+		GROUP BY ckname, nianfen
+		ORDER BY ckname DESC,nianfen DESC
+
+
+	</select>
+
+	<select id="searchByLike" parameterType="String" resultType="java.util.Map" >
+		SELECT DISTINCT c.cust_name as "custName" FROM ${tableName} c
+	</select>
+</mapper>

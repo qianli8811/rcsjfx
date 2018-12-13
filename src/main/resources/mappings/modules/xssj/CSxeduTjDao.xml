@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.xssj.dao.CSxeduTjDao">
+    
+	<sql id="cSxeduTjColumns">
+		a.id AS "id",
+		a.nianfen AS "nianfen",
+		a.yuefen AS "yuefen",
+		a.ckname AS "ckName",
+		a.sfhz AS "sfhz",
+		rzje,
+		a.flmzb AS "flmzb",
+		a.zjzzcs AS "zjzzcs",
+		a.kfzbl AS "kfzbl",
+		a.dsyear AS "dsyear",
+		a.deyear AS "deyear",
+		a.dyyear AS "dyyear",
+		a.sanyear AS "sanyear",
+		a.dyear AS "dyear",
+		a.sxsxed AS "sxsxed",
+		a.sxxxed AS "sxxxed",
+		a.qntqljxs AS "qntqljxs",
+		a.ljys AS "ljys",
+		a.qnys AS "qnys",
+		a.dcl AS "dcl",
+		a.qnjd AS "qnjd",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="cSxeduTjJoins">
+	</sql>
+
+
+	<select id="get" resultType="CSxeduTj" >
+		SELECT
+			<include refid="cSxeduTjColumns"/>
+		FROM c_sxedu_tj a
+		<include refid="cSxeduTjJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="CSxeduTj" >
+		SELECT
+			<include refid="cSxeduTjColumns"/>
+		FROM c_sxedu_tj a
+		<include refid="cSxeduTjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="nianfen != null and nianfen != ''">
+				AND a.nianfen = #{nianfen}
+			</if>
+			<if test="yuefen != null and yuefen != ''">
+				AND a.yuefen = #{yuefen}
+			</if>
+			<if test="sfhz != null ">
+				AND a.sfhz = #{sfhz}
+			</if>
+			<if test="ckName != null and ckName != ''">
+				AND a.ckname LIKE
+					<if test="dbName == 'oracle'">'%'||#{ckName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{ckName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{ckName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sfhz DESC, a.qnjd  DESC,a.dyear DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="CSxeduTj" >
+		SELECT
+			<include refid="cSxeduTjColumns"/>
+		FROM c_sxedu_tj a
+		<include refid="cSxeduTjJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO c_sxedu_tj(
+				id,
+				nianfen,
+				yuefen,
+				ckname,
+				sfhz,
+				rzje,
+				flmzb,
+				zjzzcs,
+				kfzbl,
+				dsyear,
+				deyear,
+				dyyear,
+				sanyear,
+				dyear,
+				sxsxed,
+				sxxxed,
+				qntqljxs,
+				ljys,
+				qnys,
+				dcl,
+				qnjd,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{nianfen},
+			#{yuefen},
+			#{ckName},
+			#{sfhz},
+			#{rzje},
+			#{flmzb},
+			#{zjzzcs},
+			#{kfzbl},
+			#{dsyear},
+			#{deyear},
+			#{dyyear},
+			#{sanyear},
+			#{dyear},
+			#{sxsxed},
+			#{sxxxed},
+			#{qntqljxs},
+			#{ljys},
+			#{qnys},
+			#{dcl},
+			#{qnjd},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	<insert id="insertBatchCSxeduTj" parameterType="java.util.List">
+		insert into c_sxedu_tj (
+		id,
+		nianfen,
+		yuefen,
+		ckname,
+		sfhz,
+		rzje,
+		flmzb,
+		zjzzcs,
+		kfzbl,
+		dsyear,
+		deyear,
+		dyyear,
+		sanyear,
+		dyear,
+		sxsxed,
+		sxxxed,
+		qntqljxs,
+		ljys,
+		qnys,
+		dcl,
+		qnjd,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.id,jdbcType=VARCHAR},
+			#{item.nianfen,jdbcType=INTEGER},
+			#{item.yuefen,jdbcType=INTEGER},
+			#{item.ckName,jdbcType=VARCHAR},
+			#{item.sfhz,jdbcType=INTEGER},
+
+			#{item.rzje,jdbcType=VARCHAR},
+			#{item.flmzb,jdbcType=DOUBLE},
+			#{item.zjzzcs,jdbcType=INTEGER},
+			#{item.kfzbl,jdbcType=DOUBLE},
+			#{item.dsyear,jdbcType=DOUBLE},
+			#{item.deyear,jdbcType=DOUBLE},
+			#{item.dyyear,jdbcType=DOUBLE},
+			#{item.sanyear,jdbcType=DOUBLE},
+			#{item.dyear,jdbcType=DOUBLE},
+			#{item.sxsxed,jdbcType=DOUBLE},
+			#{item.sxxxed,jdbcType=DOUBLE},
+			#{item.qntqljxs,jdbcType=DOUBLE},
+			#{item.ljys,jdbcType=DOUBLE},
+			#{item.qnys,jdbcType=DOUBLE},
+			#{item.dcl,jdbcType=DOUBLE},
+			#{item.qnjd,jdbcType=DOUBLE},
+			#{item.createBy.id,jdbcType=VARCHAR},
+			#{item.createDate,jdbcType=DATE},
+			#{item.updateBy.id,jdbcType=VARCHAR},
+			#{item.updateDate,jdbcType=DATE},
+			#{item.remarks,jdbcType=VARCHAR},
+			#{item.delFlag,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE c_sxedu_tj SET 	
+					id = #{id},
+
+					nianfen = #{nianfen},
+
+					yuefen = #{yuefen},
+
+					ckname = #{ckName},
+
+					sfhz = #{sfhz},
+
+					flmzb = #{flmzb},
+
+					zjzzcs = #{zjzzcs},
+
+					kfzbl = #{kfzbl},
+
+					dsyear = #{dsyear},
+
+					deyear = #{deyear},
+
+					dyyear = #{dyyear},
+
+					sanyear = #{sanyear},
+
+					dyear = #{dyear},
+
+					sxsxed = #{sxsxed},
+
+					sxxxed = #{sxxxed},
+
+					qntqljxs = #{qntqljxs},
+
+					ljys = #{ljys},
+
+					qnys = #{qnys},
+
+					dcl = #{dcl},
+
+					qnjd = #{qnjd},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM c_sxedu_tj
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE c_sxedu_tj SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="CSxeduTj" statementType="STATEMENT">
+		select * FROM c_sxedu_tj  where ${propertyName} = '${value}'
+	</select>
+
+
+
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="getCSxeduTj" resultType="CSxeduTj" parameterType="CSxeduTj">
+		SELECT
+			t6.ckName ,t6.sfhz,
+			IFNULL( t6.flmzb, 100 ) / 100 AS flmzb,
+			IFNULL( t6.zjzzcs, 6 ) AS zjzzcs,
+			IFNULL( t6.khfzb, 60 ) / 100 AS kfzbl,
+			IFNULL( t6.rzje, 0 ) AS rzje,
+			IFNULL(t6.dsyear, 0 ) AS dsyear,
+			IFNULL(t6.deyear, 0 ) AS deyear,
+			IFNULL(t6.dyyear, 0 ) AS dyyear,
+			IFNULL(t6.sanyear, 0 ) AS sanyear,
+			IFNULL(t6.dyear, 0 ) AS dyear,
+			( IFNULL(t6.sanyear,0) / IFNULL( t6.zjzzcs, 6 ) ) / ( IFNULL( t6.flmzb, 100 ) / 100 ) * ( IFNULL( t6.khfzb, 60 ) / 100 ) - IFNULL( t6.rzje, 0 ) AS sxsxed,
+			( IFNULL(t6.sanyear,0) / IFNULL( t6.zjzzcs, 6 ) ) * ( IFNULL( t6.khfzb, 60 ) / 100 ) - IFNULL( t6.rzje, 0 ) AS sxxxed,
+			IFNULL(t6.qntqljxs,0) AS qntqljxs,
+			IFNULL(t6.ljys,0)  * IFNULL(t6.pjdwyj,0) AS ljys,
+			IFNULL(t6.qnys,0) * IFNULL(t6.pjdwyj,0) AS qnys,
+			IFNULL(t6.dyear,0) / ( IFNULL(t6.ljys,0) * IFNULL(t6.pjdwyj,0) ) AS dcl,
+			IFNULL(t6.dyear,0) / ( IFNULL(t6.qnys,0) * IFNULL(t6.pjdwyj,0) ) AS qnjd
+		FROM (
+		SELECT
+		IFNULL(t4.ckName ,t5.ckName) AS ckName ,
+		if(t5.ckName is null,0,1) AS sfhz,
+		t4.dsyear,  t4.deyear,t4.dyyear,t4.sanyear,t4.dyear,t4.qntqljxs,t4.ljys,t4.qnys,t5.flmzb,t5.rzje,
+			( SELECT c.zjzzcs AS zjzzcs FROM rc_cwzb c ) AS zjzzcs,
+			( SELECT c.khfzb AS khfzb FROM rc_cwzb c ) AS khfzb,
+			( SELECT c.pjdwyj AS pjdwyj FROM rc_cwzb c ) AS pjdwyj
+		FROM
+		(SELECT
+		IFNULL(t3.ckName1,t3.ckName2) AS ckName , dsyear,  deyear,dyyear,sanyear, dyear,qntqljxs,ljys,qnys FROM
+		(SELECT t1.ckName AS ckName1 ,qntqljxs, dsyear,  deyear,dyyear,sanyear,  dyear ,t2.ckName AS ckName2,t2.ljys,t2.qnys
+		FROM (SELECT c.ckName,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+		</if>
+				sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) AS dsyear,
+				sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) AS deyear,
+				sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) AS dyyear,
+				(	sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) 		) / 3 AS sanyear,
+		<if test="yuefen != '' and yuefen != null ">
+		<if test="yuefen == '1'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue  ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '2'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '3'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '4'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '5'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '6'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '7'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '8'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '9'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '10'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '11'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS dyear
+		</if>
+		<if test="yuefen == '12'.toString()">
+			sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS dyear
+		</if>
+	</if>
+
+
+
+			FROM 		c_custsale_tj c
+			WHERE 		c.del_flag = '0' 	AND c.tjName = 1 	GROUP BY		c.ckName
+			) t1
+			LEFT JOIN (SELECT
+				c.ckName,
+
+					<if test="yuefen != '' and yuefen != null ">
+				<if test="yuefen == '1'.toString()">
+					sum(c.yiyue) AS ljys,
+				</if>
+				<if test="yuefen == '2'.toString()">
+					sum(c.yiyue+c.eryue) AS ljys,
+				</if>
+				<if test="yuefen == '3'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue) AS ljys,
+				</if>
+				<if test="yuefen == '4'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue) AS ljys,
+				</if>
+				<if test="yuefen == '5'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue) AS ljys,
+				</if>
+				<if test="yuefen == '6'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue) AS ljys,
+				</if>
+				<if test="yuefen == '7'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue) AS ljys,
+				</if>
+				<if test="yuefen == '8'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue) AS ljys,
+				</if>
+				<if test="yuefen == '9'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue) AS ljys,
+				</if>
+				<if test="yuefen == '10'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue) AS ljys,
+				</if>
+				<if test="yuefen == '11'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue) AS ljys,
+				</if>
+				<if test="yuefen == '12'.toString()">
+					sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue) AS ljys,
+				</if>
+			</if>
+		sum(c.yiyue + c.eryue + c.sanyue + c.siyue + c.wuyue + c.liuyue + c.qiyue + c.bayue + c.jiuyue + c.shiyue + c.syyyue + c.seyyue) AS qnys
+				FROM 	c_cust_yusuan c
+				WHERE		c.del_flag = '0' AND c.nianfen = ${nianfen} GROUP BY c.ckName
+				) t2 on t1.ckName = t2.ckName
+		union
+		SELECT t1.ckName AS ckName1 ,qntqljxs, dsyear,  deyear,dyyear,sanyear,  dyear ,t2.ckName AS ckName2,t2.ljys,t2.qnys  FROM
+		(SELECT c.ckName,
+
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+		</if>
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) AS dsyear,
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) AS deyear,
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) AS dyyear,
+		(	sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) 		) / 3 AS sanyear,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS dyear
+			</if>
+		</if>
+
+		FROM 		c_custsale_tj c
+			WHERE 		c.del_flag = '0' 	AND c.tjName = 1 	GROUP BY		c.ckName ) t1
+			RIGHT JOIN (SELECT 	c.ckName,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum(c.yiyue) AS ljys,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum(c.yiyue+c.eryue) AS ljys,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue) AS ljys,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue) AS ljys,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue) AS ljys,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue) AS ljys,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue) AS ljys,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue) AS ljys,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue) AS ljys,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue) AS ljys,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue) AS ljys,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue) AS ljys,
+			</if>
+		</if>
+
+		sum(c.yiyue + c.eryue + c.sanyue + c.siyue + c.wuyue + c.liuyue + c.qiyue + c.bayue + c.jiuyue + c.shiyue + c.syyyue + c.seyyue) AS qnys
+			FROM 		c_cust_yusuan c
+			WHERE		c.del_flag = '0' 		AND c.nianfen = ${nianfen} GROUP BY c.ckName ) t2 on t1.ckName = t2.ckName )
+			t3 )t4
+		LEFT JOIN
+			(SELECT r.id,		r.khmc AS ckName,		r.khjm,		r.flmzb,	k.rzje 	FROM		rc_khzl r LEFT JOIN (		SELECT k.khzl_id,	sum( k.rzje ) AS rzje FROM ke_rz k WHERE k.is_jq = 0 GROUP BY	k.khzl_id ) k ON r.id = k.khzl_id ) t5 on t4.ckName = t5.ckName
+
+		union
+		SELECT
+		IFNULL(t4.ckName ,t5.ckName),IF(t4.ckName is null ,0,1) AS sfhz,
+		t4.dsyear,  t4.deyear,t4.dyyear,t4.sanyear,t4.dyear,t4.qntqljxs,t4.ljys,t4.qnys,t5.flmzb,t5.rzje,
+		( SELECT c.zjzzcs AS zjzzcs FROM rc_cwzb c ) AS zjzzcs,
+		( SELECT c.khfzb AS khfzb FROM rc_cwzb c ) AS khfzb,
+		( SELECT c.pjdwyj AS pjdwyj FROM rc_cwzb c ) AS pjdwyj
+		FROM (SELECT IFNULL(t3.ckName1,ckName2) AS ckName , dsyear,  deyear,dyyear,sanyear, dyear,qntqljxs,ljys,qnys
+		FROM (SELECT t1.ckName AS ckName1 ,qntqljxs, dsyear,  deyear,dyyear,sanyear,  dyear ,t2.ckName AS ckName2,t2.ljys,t2.qnys
+		FROM ( SELECT c.ckName,
+
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+		</if>
+
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) AS dsyear,
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) AS deyear,
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) AS dyyear,
+		(	sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) 		) / 3 AS sanyear,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS dyear
+			</if>
+		</if>
+
+		FROM 		c_custsale_tj c
+			WHERE 		c.del_flag = '0'  AND c.tjName = 1 	GROUP BY c.ckName ) t1
+			LEFT JOIN (SELECT 	c.ckName,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum(c.yiyue) AS ljys,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum(c.yiyue+c.eryue) AS ljys,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue) AS ljys,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue) AS ljys,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue) AS ljys,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue) AS ljys,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue) AS ljys,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue) AS ljys,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue) AS ljys,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue) AS ljys,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue) AS ljys,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue) AS ljys,
+			</if>
+		</if>
+
+		sum(c.yiyue + c.eryue + c.sanyue + c.siyue + c.wuyue + c.liuyue + c.qiyue + c.bayue + c.jiuyue + c.shiyue + c.syyyue + c.seyyue) AS qnys
+			FROM 		c_cust_yusuan c
+			WHERE		c.del_flag = '0' 		AND c.nianfen = ${nianfen} GROUP BY c.ckName
+			) t2 on t1.ckName = t2.ckName
+		union  SELECT t1.ckName AS ckName1 ,qntqljxs, dsyear,  deyear,dyyear,sanyear,  dyear ,t2.ckName AS ckName2,t2.ljys,t2.qnys  FROM
+		(SELECT
+			c.ckName,
+
+
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}-1) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS qntqljxs,
+			</if>
+		</if>
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) AS dsyear,
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) AS deyear,
+		sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) AS dyyear,
+		(	sum( CASE WHEN c.nianfen = ( ${nianfen}-1 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-2 ) THEN num ELSE 0 END ) + sum( CASE WHEN c.nianfen = ( ${nianfen}-3 ) THEN num ELSE 0 END ) 		) / 3 AS sanyear,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue  ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue ELSE 0 END 	) AS dyear
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum( CASE WHEN c.nianfen = (${nianfen}) THEN	c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyue+c.seyyue ELSE 0 END 	) AS dyear
+			</if>
+		</if>
+
+		FROM 		c_custsale_tj c
+			WHERE 		c.del_flag = '0' 		AND c.tjName = 1 	GROUP BY		c.ckName ) t1
+			RIGHT JOIN (SELECT 	c.ckName,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				sum(c.yiyue) AS ljys,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				sum(c.yiyue+c.eryue) AS ljys,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue) AS ljys,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue) AS ljys,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue) AS ljys,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue) AS ljys,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue) AS ljys,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue) AS ljys,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue) AS ljys,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue) AS ljys,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue) AS ljys,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue) AS ljys,
+			</if>
+		</if>
+		sum(c.yiyue + c.eryue + c.sanyue + c.siyue + c.wuyue + c.liuyue + c.qiyue + c.bayue + c.jiuyue + c.shiyue + c.syyyue + c.seyyue) AS qnys
+			FROM 		c_cust_yusuan c
+			WHERE		c.del_flag = '0' 		AND c.nianfen = ${nianfen} GROUP BY c.ckName
+			) t2 on t1.ckName = t2.ckName ) t3 ) t4 RIGHT JOIN
+			(SELECT r.id,		r.khmc AS ckName,		r.khjm,		r.flmzb,		k.rzje 	FROM		rc_khzl r LEFT JOIN (		SELECT k.khzl_id,	sum( k.rzje ) AS rzje FROM ke_rz k WHERE k.is_jq = 0 GROUP BY	k.khzl_id ) k ON r.id = k.khzl_id ) t5 on t4.ckName = t5.ckName
+
+		) t6
+		<where>
+			<if test="sfhz != null and sfhz != ''">
+			t6.sfhz =  #{sfhz}
+			</if>
+		</where>
+
+
+	</select>
+	
+	<select id="getZt" resultType="java.util.Map" parameterType="CSxeduTj">
+		SELECT
+		t.jzrq,
+		t.ljxs/(t.ljys * t1.pjdwyj) as sydcl,
+		t.ljxs/(t.qnys* t1.pjdwyj) as qnjd
+		FROM (SELECT (SELECT
+						<if test="yuefen != '' and yuefen != null ">
+							<if test="yuefen == '1'.toString()">
+								sum(c.yiyue)
+							</if>
+							<if test="yuefen == '2'.toString()">
+								sum(c.yiyue+c.eryue)
+							</if>
+							<if test="yuefen == '3'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue)
+							</if>
+							<if test="yuefen == '4'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue)
+							</if>
+							<if test="yuefen == '5'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue)
+							</if>
+							<if test="yuefen == '6'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue)
+							</if>
+							<if test="yuefen == '7'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue)
+							</if>
+							<if test="yuefen == '8'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue)
+							</if>
+							<if test="yuefen == '9'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue)
+							</if>
+							<if test="yuefen == '10'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue)
+							</if>
+							<if test="yuefen == '11'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue)
+							</if>
+							<if test="yuefen == '12'.toString()">
+								sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue)
+							</if>
+						</if>
+
+						FROM c_custsale_tj c WHERE c.nianfen = ${nianfen} and c.tjName =1) as ljxs,
+					(SELECT max(c.fapiaoshiqi)  FROM	c_cust_sale_${nianfen} c WHERE	c.del_flag = 0 ) AS jzrq,
+					(SELECT
+						<if test="yuefen != '' and yuefen != null ">
+								<if test="yuefen == '1'.toString()">
+									sum(c.yiyue)
+								</if>
+								<if test="yuefen == '2'.toString()">
+									sum(c.yiyue+c.eryue)
+								</if>
+								<if test="yuefen == '3'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue)
+								</if>
+								<if test="yuefen == '4'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue)
+								</if>
+								<if test="yuefen == '5'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue)
+								</if>
+								<if test="yuefen == '6'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue)
+								</if>
+								<if test="yuefen == '7'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue)
+								</if>
+								<if test="yuefen == '8'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue)
+								</if>
+								<if test="yuefen == '9'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue)
+								</if>
+								<if test="yuefen == '10'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue)
+								</if>
+								<if test="yuefen == '11'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue)
+								</if>
+								<if test="yuefen == '12'.toString()">
+									sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue)
+								</if>
+							</if>
+
+					FROM c_cust_yusuan c WHERE c.nianfen = ${nianfen} ) as ljys,
+					(SELECT
+						sum(c.yiyue+c.eryue+c.sanyue+c.siyue+c.wuyue+c.liuyue+c.qiyue+c.bayue+c.jiuyue+c.shiyue+c.syyyue+c.seyyue)
+			FROM c_cust_yusuan c WHERE c.nianfen = ${nianfen}
+		) as qnys) t,(SELECT zjzzcs,khfzb,pjdwyj  FROM rc_cwzb) t1
+	</select>
+
+	<select id="getMaxDate"  resultType="java.lang.String" >
+		SELECT max(c.fapiaoshiqi) FROM ${tableName} c WHERE c.del_flag = 0
+	</select>
+
+	<parameterMap type="CSxeduTj" id="cSxeduTjMap">
+		<parameter property="ckName" mode="IN" jdbcType="VARCHAR"/>
+		<parameter property="nianfen" mode="IN" jdbcType="INTEGER"/>
+		<parameter property="yuefen" mode="IN" jdbcType="INTEGER"/>
+		<parameter property="sfhz" mode="IN" jdbcType="INTEGER"/>
+		<parameter property="page.pageSize" mode="IN" jdbcType="INTEGER"/>
+		<parameter property="page.pageNo" mode="IN" jdbcType="INTEGER"/>
+	</parameterMap>
+
+	<resultMap id="resultMap" type="java.util.Map">
+		<result property="ckName" column="ckName"/>
+		<result property="nianfen" column="nianfen"/>
+		<result property="yuefen" column="yuefen"/>
+		<result property="sfhz" column="sfhz"/>
+		<result property="rzje" column="rzje"/>
+		<result property="flmzb" column="flmzb"/>
+		<result property="zjzzcs" column="zjzzcs"/>
+		<result property="kfzbl" column="kfzbl"/>
+		<result property="dsyear" column="dsyear"/>
+		<result property="deyear" column="deyear"/>
+		<result property="dyyear" column="dyyear"/>
+		<result property="sanyear" column="sanyear"/>
+		<result property="dyear" column="dyear"/>
+		<result property="sxsxed" column="sxsxed"/>
+		<result property="sxxxed" column="sxxxed"/>
+		<result property="qntqljxs" column="qntqljxs"/>
+		<result property="ljys" column="ljys"/>
+		<result property="qnys" column="qnys"/>
+		<result property="dcl" column="dcl"/>
+		<result property="qnjd" column="qnjd"/>
+	</resultMap>
+	<resultMap id="countMap" type="java.util.Map">
+		<result property="count" column="count" />
+	</resultMap>
+	<resultMap id="maxDate" type="java.util.Map">
+		<result property="maxDate" column="maxDate"  />
+	</resultMap>
+
+
+	<select id="getKeHuTj" resultMap="resultMap,countMap,maxDate" parameterMap="cSxeduTjMap" statementType = "CALLABLE" >
+		<!--<![CDATA[{CALL getKeHuTj(?,?,?,?,?,?)}]]>-->
+		{CALL getKeHuTj(?,?,?,?,?,?)}
+	</select>
+</mapper>

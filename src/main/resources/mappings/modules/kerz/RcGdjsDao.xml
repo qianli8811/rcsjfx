@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.kerz.dao.RcGdjsDao">
+    
+	<sql id="rcGdjsColumns">
+		a.id AS "id",
+		a.rc_gdxx_id AS "rcGdxx.id",
+		a.jsgx AS "jsgx",
+		a.jsxm AS "jsxm",
+		a.sfzh AS "sfzh",
+		a.xb AS "xb",
+		a.nl AS "nl",
+		a.job AS "job",
+		a.telephone AS "telephone",
+		a.is_marry AS "isMarry",
+		a.is_dbr AS "isDbr",
+		a.peiouxm AS "peiouxm",
+		a.peiousfzh AS "peiousfzh",
+		a.peiouxb AS "peiouxb",
+		a.peiounl AS "peiounl",
+		a.peiouxl AS "peiouxl",
+		a.peioujob AS "peioujob",
+		a.peioudh AS "peioudh",
+		a.peiouisdbr AS "peiouisdbr",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="rcGdjsJoins">
+	</sql>
+
+
+	<select id="get" resultType="RcGdjs" >
+		SELECT
+			<include refid="rcGdjsColumns"/>
+		FROM rc_gdjs a
+		<include refid="rcGdjsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="RcGdjs" >
+		SELECT
+			<include refid="rcGdjsColumns"/>
+		FROM rc_gdjs a
+		<include refid="rcGdjsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="jsgx != null and jsgx != ''">
+				AND a.jsgx = #{jsgx}
+			</if>
+			<if test="rcGdxx != null and rcGdxx != '' and rcGdxx.id != null and rcGdxx.id != ''">
+				AND a.rc_gdxx_id = #{rcGdxx.id}
+			</if>
+			<if test="jsxm != null and jsxm != ''">
+				AND a.jsxm LIKE
+					<if test="dbName == 'oracle'">'%'||#{jsxm}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{jsxm}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{jsxm},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="RcGdjs" >
+		SELECT
+			<include refid="rcGdjsColumns"/>
+		FROM rc_gdjs a
+		<include refid="rcGdjsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO rc_gdjs(
+				id,
+				rc_gdxx_id,
+				jsgx,
+				jsxm,
+				sfzh,
+				xb,
+				nl,
+				job,
+				telephone,
+				is_marry,
+				is_dbr,
+				peiouxm,
+				peiousfzh,
+				peiouxb,
+				peiounl,
+				peiouxl,
+				peioujob,
+				peioudh,
+				peiouisdbr,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES (
+			#{id},
+			#{rcGdxx.id},
+			#{jsgx},
+			#{jsxm},
+			#{sfzh},
+			#{xb},
+			#{nl},
+			#{job},
+			#{telephone},
+			#{isMarry},
+			#{isDbr},
+			#{peiouxm},
+			#{peiousfzh},
+			#{peiouxb},
+			#{peiounl},
+			#{peiouxl},
+			#{peioujob},
+			#{peioudh},
+			#{peiouisdbr},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE rc_gdjs SET 	
+					id = #{id},
+
+					rc_gdxx_id = #{rcGdxx.id},
+
+					jsgx = #{jsgx},
+
+					jsxm = #{jsxm},
+
+					sfzh = #{sfzh},
+
+					xb = #{xb},
+
+					nl = #{nl},
+
+					job = #{job},
+
+					telephone = #{telephone},
+
+					is_marry = #{isMarry},
+
+					is_dbr = #{isDbr},
+
+					peiouxm = #{peiouxm},
+
+					peiousfzh = #{peiousfzh},
+
+					peiouxb = #{peiouxb},
+
+					peiounl = #{peiounl},
+
+					peiouxl = #{peiouxl},
+
+					peioudh = #{peioudh},
+
+					peioujob = #{peioujob},
+
+					peiouisdbr = #{peiouisdbr},
+
+					create_by = #{createBy.id},
+
+					create_date = #{createDate},
+
+					update_by = #{updateBy.id},
+
+					update_date = #{updateDate},
+
+					remarks = #{remarks},
+
+					del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM rc_gdjs
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE rc_gdjs SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="RcGdjs" statementType="STATEMENT">
+		select * FROM rc_gdjs  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

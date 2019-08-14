@@ -4,15 +4,36 @@
 <head>
 	<title>股东信息管理</title>
 	<meta name="decorator" content="default"/>
+	<script type="text/javascript" src="${ctxStatic}/bootstrap/3.3.4/js/bootstrap3-typeahead.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$.ajax({
 				type: "POST",
 				url: "${ctx}/kerz/rcKhzl/getRcKhzlmc?time="+ new Date().getTime(),
 				dataType: "json",
+				data:{"khmc":$("#rcKhzlId").val()},
 				success: function(data){
+					var jsonData = eval(data);
 
-					data = eval(data);
+					var source = new Array();
+
+					if(jsonData && jsonData.length>0){
+						for(var i in jsonData){
+							source[i] = jsonData[i].khmc;
+						}
+					}
+
+					console.info(source);
+					$("#rcKhzlId").typeahead({
+						minLength: 2,//键入字数多少开始补全
+						showHintOnFocus: "true",//将显示所有匹配项
+						fitToElement: true,//选项框宽度与输入框一致
+						items: "all",//提示数量上限
+						autoSelect: true,
+						source: source// 数据源
+					});
+
+					/*data = eval(data);
 					var html = '';
 					$("#rcKhzlId").html('');
 					if(data){
@@ -26,7 +47,10 @@
 						html += '<option value=""></option>';
 					}
 
-					$("#rcKhzlId").html(html);
+					$("#rcKhzlId").html(html);*/
+
+
+
 				}
 			});
 		});
@@ -69,9 +93,11 @@
 		<div class="form-group">
 			<span>客户名称：</span>
 
-			<select id="rcKhzlId" name="rcKhzl.id"  class="form-control m-b">
+			<%--<select id="rcKhzlId" name="rcKhzl.id"  class="form-control m-b">
 
-			</select>
+			</select>--%>
+
+			<input id="rcKhzlId" name="rcKhzl.khmc" value="${rcKhzl.khmc}" autocomplete="off" data-provide="typeahead" class=" form-control input-sm">
 
 			<span>类型：</span>
 				<form:select path="khlx"  class="form-control m-b">

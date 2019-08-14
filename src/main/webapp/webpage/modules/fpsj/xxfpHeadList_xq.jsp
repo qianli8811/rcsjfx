@@ -201,6 +201,8 @@
 					<th  class="sort-column fphm">发票号码</th>
 					<th  class="sort-column fphm">发票代码</th>
 					<th  class="sort-column qymc">销方名称</th>
+					<th  class="sort-column qykhyhzh">开票方银行账号</th>
+
 					<th  class="sort-column kpr">开票人</th>
 					<th  class="sort-column zfbz">作废标志</th>
 					<th  class="sort-column kplx">开票类型 </th>
@@ -235,6 +237,9 @@
 
 						<td>
 								${xxfpHead.qymc}
+						</td>
+						<td>
+								${xxfpHead.qykhyhzh}
 						</td>
 
 						<td>

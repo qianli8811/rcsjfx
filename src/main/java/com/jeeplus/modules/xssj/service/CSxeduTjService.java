@@ -82,6 +82,7 @@ public class CSxeduTjService extends CrudService<CSxeduTjDao, CSxeduTj> {
 		CSxeduTj cSxeduTj = new CSxeduTj();
 		cSxeduTj.setNianfen(year);
 		cSxeduTj.setYuefen(month);
+		dao.deleteCSxeduTj(cSxeduTj);//清除当月的数据
 		List<CSxeduTj> list1 = dao.getCSxeduTj(cSxeduTj);
 
 		List<CSxeduTj> list2 = new ArrayList<>();
@@ -98,5 +99,9 @@ public class CSxeduTjService extends CrudService<CSxeduTjDao, CSxeduTj> {
 			}
 		}
 		dao.insertBatchCSxeduTj(list2);
+	}
+	@Transactional(readOnly = false)
+	public void deleteCSxeduTj(CSxeduTj cSxeduTj){
+		dao.deleteCSxeduTj(cSxeduTj);
 	}
 }

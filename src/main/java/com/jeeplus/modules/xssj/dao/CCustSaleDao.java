@@ -24,4 +24,12 @@ public interface CCustSaleDao extends CrudDao<CCustSale> {
 	 * 词汇联想
 	 */
 	public List<Map<String,String>> searchByLike(String name);
+
+
+	/**
+	 * 词汇联想
+	 */
+	public int  insertBatch(List<CCustSale> list);
+
+
 }

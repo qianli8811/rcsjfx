@@ -362,4 +362,84 @@
 	<select id="searchByLike" parameterType="String" resultType="java.util.Map" >
 		SELECT DISTINCT c.cust_name as "custName" FROM ${tableName} c
 	</select>
+
+	<insert  id="insertBatch"  parameterType="java.util.List"  >
+		INSERT INTO c_cust_sale_2010 (
+				id,
+				gongchang,
+				daqu,
+				chengshi,
+				yewuyuan,
+				cust_no,
+				cust_name,
+				dapinleimiaoshu,
+				yijipinleimiaoshu,
+				erjipinleimiaoshu,
+				sanjipinleimiaoshu,
+				chanpinxianmiaoshu,
+				wuliaobianma,
+				wuliaomiaoshu,
+				xiang,
+				dun,
+				xiaoshoushouru,
+				jingzhi,
+				shuie,
+				zhanlvjine,
+				zhekoujine,
+				zhekoubili,
+				shoudafangjiancheng,
+				fapiaoshiqi,
+				dingdanbianhao,
+				danjuriqi,
+				kucundidian,
+				caigoubianhao,
+				create_by,
+				create_date,
+				update_by,
+				update_date,
+				remarks,
+				del_flag
+		) VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.id},
+			#{item.gongchang},
+			#{item.daqu},
+			#{item.chengshi},
+			#{item.yewuyuan},
+			#{item.custNo},
+			#{item.custName},
+			#{item.dapinleimiaoshu},
+			#{item.yijipinleimiaoshu},
+			#{item.erjipinleimiaoshu},
+			#{item.sanjipinleimiaoshu},
+			#{item.chanpinxianmiaoshu},
+			#{item.wuliaobianma},
+			#{item.wuliaomiaoshu},
+			#{item.xiang},
+			#{item.dun},
+			#{item.xiaoshoushouru},
+			#{item.jingzhi},
+			#{item.shuie},
+			#{item.zhanlvjine},
+			#{item.zhekoujine},
+			#{item.zhekoubili},
+			#{item.shoudafangjiancheng},
+			#{item.fapiaoshiqi},
+			#{item.dingdanbianhao},
+			#{item.danjuriqi},
+			#{item.kucundidian},
+			#{item.caigoubianhao},
+			#{item.createBy.id},
+			#{item.createDate},
+			#{item.updateBy.id},
+			#{item.updateDate},
+			#{item.remarks},
+			#{item.delFlag}
+			)
+		</foreach>
+
+
+	</insert>
+
 </mapper>

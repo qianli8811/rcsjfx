@@ -24,6 +24,7 @@
 	</sql>
 
 	<sql id="rcGdxxJoins">
+
 	</sql>
 
 
@@ -38,12 +39,15 @@
 	<select id="findList" resultType="RcGdxx" >
 		SELECT
 			<include refid="rcGdxxColumns"/>
-		FROM rc_gdxx a
-		<include refid="rcGdxxJoins"/>
+		FROM rc_gdxx AS a
+			RIGHT JOIN rc_khzl AS r on r.id = a.khzl_id
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="rcKhzl != null and rcKhzl != '' and rcKhzl.id != null and rcKhzl.id != ''">
 				AND a.khzl_id = #{rcKhzl.id}
+			</if>
+			<if test="rcKhzl != null and rcKhzl != '' and rcKhzl.khmc != null and rcKhzl.khmc != ''">
+				AND r.khmc LIKE CONCAT('%', #{rcKhzl.khmc}, '%')
 			</if>
 			<if test="khlx != null and khlx != ''">
 				AND a.khlx = #{khlx}

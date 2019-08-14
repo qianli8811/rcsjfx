@@ -16,11 +16,8 @@ import com.jeeplus.modules.fpsj.entity.JxfpItem;
 import com.jeeplus.modules.fpsj.service.JxfpHeadService;
 import com.jeeplus.modules.fpsj.service.JxfpItemService;
 import com.jeeplus.modules.fpsj.service.XxfpHeadService;
-import com.jeeplus.modules.kerz.entity.Gdfxtj;
-import com.jeeplus.modules.kerz.entity.KeRz;
-import com.jeeplus.modules.kerz.entity.RcGd;
-import com.jeeplus.modules.kerz.service.KeRzService;
-import com.jeeplus.modules.kerz.service.RcGdService;
+import com.jeeplus.modules.kerz.entity.*;
+import com.jeeplus.modules.kerz.service.*;
 import com.jeeplus.modules.xssj.entity.CCustsaleTj;
 import com.jeeplus.modules.xssj.service.CCustsaleTjService;
 import org.apache.shiro.authz.annotation.Logical;
@@ -41,8 +38,6 @@ import com.jeeplus.common.web.BaseController;
 import com.jeeplus.common.utils.StringUtils;
 import com.jeeplus.common.utils.excel.ExportExcel;
 import com.jeeplus.common.utils.excel.ImportExcel;
-import com.jeeplus.modules.kerz.entity.RcKhzl;
-import com.jeeplus.modules.kerz.service.RcKhzlService;
 
 /**
  * 客户管理Controller
@@ -56,8 +51,7 @@ public class RcKhzlController extends BaseController {
 	@Autowired
 	private RcKhzlService rcKhzlService;
 	
-	@Autowired
-	private RcGdService rcGdService;
+
 	
 	@Autowired
 	private KeRzService keRzService;
@@ -71,7 +65,12 @@ public class RcKhzlController extends BaseController {
 	private JxfpItemService jxfpItemService;
 	@Autowired
 	private XxfpHeadService xxfpHeadService;
-	
+
+	@Autowired
+	private RcGdjsService rcGdjsService;
+	@Autowired
+	private RcGdxxService rcGdxxService;
+
 	@ModelAttribute
 	public RcKhzl get(@RequestParam(required=false) String id) {
 		RcKhzl entity = null;
@@ -91,7 +90,7 @@ public class RcKhzlController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(RcKhzl rcKhzl, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<RcKhzl> page = rcKhzlService.findPage(new Page<RcKhzl>(request, response), rcKhzl);
-		List<RcKhzl> list = page.getList();
+		/*List<RcKhzl> list = page.getList();
 		if(null != list && list.size()>0){
 			for (RcKhzl rcKhzl1 :list ){
 				RcGd rcGd = new RcGd();
@@ -99,7 +98,7 @@ public class RcKhzlController extends BaseController {
 				rcKhzl1.setRcGdList(rcGdService.findList(rcGd));
 			}
 		}
-		
+		*/
 		model.addAttribute("page", page);
 		return "modules/kerz/rcKhzlList";
 	}
@@ -141,7 +140,7 @@ public class RcKhzlController extends BaseController {
 		
 		RcGd rcGd = new RcGd();
 		rcGd.setKhzl(rcKhzl);
-		rcKhzl.setRcGdList(rcGdService.findList(rcGd));
+		//rcKhzl.setRcGdList(rcGdService.findList(rcGd));
 		
 		model.addAttribute("rcKhzl", rcKhzl);
 		return "modules/kerz/rcKhzlForm";
@@ -156,7 +155,7 @@ public class RcKhzlController extends BaseController {
 		if (!beanValidator(model, rcKhzl)){
 			return form(rcKhzl, model);
 		}
-		List<RcGd> rcGdList = rcKhzl.getRcGdList();
+		/*List<RcGd> rcGdList = rcKhzl.getRcGdList();
 		
 		if(!rcKhzl.getIsNewRecord()){//编辑表单保存
 			RcKhzl t = rcKhzlService.get(rcKhzl.getId());//从数据库取出记录的值
@@ -175,7 +174,7 @@ public class RcKhzlController extends BaseController {
 				rcGdService.save(rcGd);
 			}
 		}
-		
+		*/
 		addMessage(redirectAttributes, "保存客户信息成功");
 		return "redirect:"+Global.getAdminPath()+"/kerz/rcKhzl/?repage";
 	}
@@ -349,24 +348,36 @@ public class RcKhzlController extends BaseController {
 		RcKhzl rcKhzl1 = rcKhzlService.get(rcKhzl);
 		if(null != rcKhzl1 ){
 			model.addAttribute("rcKhzl1", rcKhzl1);
-			
-			RcGd rc = new RcGd();
-			rc.setKhzl(rcKhzl1);
+
+			RcGdxx rcGdxx = new RcGdxx();
+
+			/*RcGd rc = new RcGd();
+			//rcGdxx.setKhzl(rcKhzl1);*/
+			rcGdxx.setRcKhzl(rcKhzl1);
+
 			//获取股东信息
-			List<RcGd> rcGdList = rcGdService.findList(rc);
-			Map<RcGd,List<RcGd>> gdMap = new HashMap<RcGd,List<RcGd>>();
+			List<RcGdxx> rcGdList = rcGdxxService.findList(rcGdxx);
+
+			Map<RcGdxx,List<RcGdjs>> gdMap = new HashMap<RcGdxx,List<RcGdjs>>();
 			if(null != rcGdList && rcGdList.size()>0){
-				for(RcGd rcGd : rcGdList){
+				for(RcGdxx rcGdxx1 : rcGdList){
 					/**
 					 * 股东家属信息
 					 */
-					List<RcGd> rcgdList = new ArrayList<RcGd>();
-					for(RcGd rcGd1 : rcGdList){
+					List<RcGdjs> rcgdList = new ArrayList<RcGdjs>();
+					/*String id = rcGd.getId();*/
+					RcGdjs rcGdjs = new RcGdjs();
+					rcGdjs.setRcGdxx(rcGdxx1);
+					List<RcGdjs> list = rcGdjsService.findList(rcGdjs);
+					gdMap.put(rcGdxx1,list);
+
+
+					/*for(RcGd rcGd1 : rcGdList){
 						if(rcGd.getId().equals(rcGd1.getParentId())){
 							rcgdList.add(rcGd1);
 						}
 					}
-					gdMap.put(rcGd,rcgdList);
+					gdMap.put(rcGd,rcgdList);*/
 				}
 			}
 			model.addAttribute("gdMap", gdMap);
@@ -652,9 +663,9 @@ public class RcKhzlController extends BaseController {
 //			CSxeduTj csxeduTj = new CSxeduTj();
 //			csxeduTj.setNianfen(date.get(Calendar.YEAR));
 //			csxeduTj.setYuefen(date.get(Calendar.MONTH)+1);
-//			//csxeduTj.setTjName("1");
-//			//csxeduTj.setKhmc(rcKhzl1.getKhmc());
-//			//csxeduTj.setSfhz("1");
+//			/.setTjName("1");
+//			/.setKhmc(rcKhzl1.getKhmc());
+//			/.setSfhz("1");
 //
 //			Page<CsxeduTj> page  = cCustsaleTjService.getSxedu(new Page<CsxeduTj>(request, response),csxeduTj);
 //			model.addAttribute("csxeduTj", csxeduTj);

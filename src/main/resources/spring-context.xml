@@ -47,7 +47,6 @@
     <task:annotation-driven scheduler="scheduler" executor="executor" proxy-target-class="true"/>
 
 
-
 	<import resource="spring-context-shiro.xml"/>
     <import resource="spring-context-jedis.xml"/>
 

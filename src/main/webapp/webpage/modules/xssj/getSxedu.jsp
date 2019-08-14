@@ -14,6 +14,7 @@
 				data:{"searchName":$("#khmc").val()},
 				success:function(data){
 					var source = data;
+					console.info(source);
 					$("#ckname").typeahead({
 						minLength: 2,//键入字数多少开始补全
 						showHintOnFocus: "true",//将显示所有匹配项
@@ -24,6 +25,18 @@
 					});
 				}
 			});
+            var date=new Date;
+            var year=date.getFullYear();
+
+            for(var i=year;i>=year-10;i--){
+                var options = "<option value='" + i+"'>"+i+'年'+"</option>";
+                $("#nianfen").append(options);
+            }
+
+            var nianfen = ${cSxeduTj.nianfen};
+            if(nianfen){
+                $("#nianfen option[value='${cSxeduTj.nianfen}']").attr("selected","selected");
+            }
 			var yuefen = ${cSxeduTj.yuefen};
 
 			if(yuefen){
@@ -76,6 +89,9 @@
 							<span>时间：</span>
 								<%--<form:select path="yuefen" items="${fns:getDictList('yuefen')}" itemLabel="label" itemValue="value" htmlEscape="false" class=" form-control m-b"/>
 					--%>
+							<select id = "nianfen" name="nianfen" class=" form-control m-b">
+
+							</select>
 							<select id = "yuefen" name="yuefen" class=" form-control m-b">
 								<option value="1" >1月</option>
 								<option value="2" >2月</option>

@@ -66,8 +66,15 @@ public class CCustSaleService extends CrudService<CCustSaleDao, CCustSale> {
 	public List<Map<String,String>> searchByLike(String name){
 		return dao.searchByLike(name);
 	}
-	
-	
-	
-	
+
+	/**
+	 * 词汇联想
+	 */
+	@Transactional(readOnly = false)
+	public int  insertBatch(List<CCustSale> list){
+		return dao.insertBatch(list);
+	}
+
+
+
 }

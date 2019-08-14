@@ -7,6 +7,7 @@ import com.jeeplus.common.persistence.CrudDao;
 import com.jeeplus.common.persistence.annotation.MyBatisDao;
 import com.jeeplus.modules.fpsj.entity.JxfpHead;
 import com.jeeplus.modules.xssj.entity.CCustsaleTj;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,8 @@ import java.util.Map;
 public interface JxfpHeadDao extends CrudDao<JxfpHead> {
 	
 	public List<String> getJxGsName();
-	
+
+
 	public List<CCustsaleTj> getKptj(CCustsaleTj cCustsaleTj);//开票统计
 	
 	public List<Map<String,Object>> getGysKptjqnjnby(CCustsaleTj cCustsaleTj);

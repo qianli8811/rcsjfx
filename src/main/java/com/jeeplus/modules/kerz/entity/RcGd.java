@@ -189,4 +189,19 @@ public class RcGd extends TreeEntity<RcGd> {
 	public void setRcKhzl(RcKhzl rcKhzl) {
 		this.rcKhzl = rcKhzl;
 	}
+
+	@Override
+	public String toString() {
+		return "RcGd{" +
+				"rcKhzl=" + rcKhzl +
+				", khlx='" + khlx + '\'' +
+				", zgb='" + zgb + '\'' +
+				", gdxm='" + gdxm + '\'' +
+				", sfzh='" + sfzh + '\'' +
+				", xb='" + xb + '\'' +
+				", nl='" + nl + '\'' +
+				", isDbr='" + isDbr + '\'' +
+				", jtcy='" + jtcy + '\'' +
+				'}';
+	}
 }

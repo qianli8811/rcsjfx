@@ -76,7 +76,7 @@ public class RcGdjsController extends BaseController {
 				RcGdjs1.setRcGdxx(rcGdxxService.get(rcGdxx));
 			}
 		}
-		
+		model.addAttribute("rcGdjs", rcGdjs);
 		model.addAttribute("page", page);
 		return "modules/kerz/rcGdjsList";
 	}
@@ -108,7 +108,7 @@ public class RcGdjsController extends BaseController {
 			rcGdjsService.save(rcGdjs);//保存
 		}
 		addMessage(redirectAttributes, "保存股东家属成功");
-		return "redirect:"+Global.getAdminPath()+"/kerz/rcGdjs/?repage";
+		return "redirect:"+Global.getAdminPath()+"/kerz/rcGdjs/?rcGdxx.id="+rcGdjs.getRcGdxx().getId();
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class RcGdjsController extends BaseController {
 	public String delete(RcGdjs rcGdjs, RedirectAttributes redirectAttributes) {
 		rcGdjsService.delete(rcGdjs);
 		addMessage(redirectAttributes, "删除股东家属成功");
-		return "redirect:"+Global.getAdminPath()+"/kerz/rcGdjs/?repage";
+		return "redirect:"+Global.getAdminPath()+"/kerz/rcGdjs/?rcGdxx.id="+rcGdjs.getRcGdxx().getId();
 	}
 	
 	/**
@@ -127,13 +127,13 @@ public class RcGdjsController extends BaseController {
 	 */
 	@RequiresPermissions("kerz:rcGdjs:del")
 	@RequestMapping(value = "deleteAll")
-	public String deleteAll(String ids, RedirectAttributes redirectAttributes) {
+	public String deleteAll(String ids,RcGdjs rcGdjs, RedirectAttributes redirectAttributes) {
 		String idArray[] =ids.split(",");
 		for(String id : idArray){
 			rcGdjsService.delete(rcGdjsService.get(id));
 		}
 		addMessage(redirectAttributes, "删除股东家属成功");
-		return "redirect:"+Global.getAdminPath()+"/kerz/rcGdjs/?repage";
+		return "redirect:"+Global.getAdminPath()+"/kerz/rcGdjs/?rcGdxx.id="+rcGdjs.getRcGdxx().getId();
 	}
 	
 	/**

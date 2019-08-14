@@ -73,18 +73,22 @@ public class CSxeduTjController extends BaseController {
 			cSxeduTj = new CSxeduTj();
 		}
 		Calendar date = Calendar.getInstance();
-		int year = date.get(Calendar.YEAR);
-		cSxeduTj.setNianfen(year);
-		Integer sfhz = cSxeduTj.getSfhz();
-		if(null == sfhz || (sfhz != 0 && sfhz != 1)){
-			cSxeduTj.setSfhz(1);//已经合作的客户
-		}
+		Integer nianfen = cSxeduTj.getNianfen();
 		Integer yuefen = cSxeduTj.getYuefen();
+		if(nianfen == null){
+			nianfen = date.get(Calendar.YEAR);
+			cSxeduTj.setNianfen(nianfen);
+		}
 		if(null == yuefen){
 			yuefen = date.get(Calendar.MONTH)+1;
 			//默认查询截止到当前月
 			cSxeduTj.setYuefen(yuefen);
 		}
+		Integer sfhz = cSxeduTj.getSfhz();
+		if(null == sfhz || (sfhz != 0 && sfhz != 1)){
+			cSxeduTj.setSfhz(1);//已经合作的客户
+		}
+
 		//授信额度
 		
 		Page<CSxeduTj> page1 = new Page<CSxeduTj>(request, response);
@@ -99,6 +103,9 @@ public class CSxeduTjController extends BaseController {
 		String  maxDate = (String)CacheUtils.get("maxDate");
 		if(StringUtils.isEmpty(maxDate)){
 			maxDate= cSxeduTjService.getMaxDate();
+			if(StringUtils.isEmpty(maxDate)){
+				maxDate = nianfen+"-"+yuefen;
+			}
 			CacheUtils.put("maxDate",maxDate);
 			threadPoolService.schedule(new CacheThread(cSxeduKey),10, TimeUnit.DAYS);//10天
 		}
@@ -121,6 +128,7 @@ public class CSxeduTjController extends BaseController {
 			ysdcl = (Map<String, Object>)CacheUtils.get("ysdcl");
 		}
 		cSxeduTj.setYuefen(yuefen);
+		cSxeduTj.setNianfen(nianfen);
 		model.addAttribute("cSxeduTj", cSxeduTj);
 		model.addAttribute("page", page);
 		model.addAttribute("ztds", ysdcl);

@@ -3,14 +3,22 @@
  */
 package com.jeeplus.modules.xssj.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.metadata.Sheet;
 import com.jeeplus.common.utils.CacheUtils;
 import com.jeeplus.modules.xssj.entity.CCustsaleTj;
+import com.jeeplus.modules.xssj.utils.CCustSaleListener;
+import com.jeeplus.modules.xssj.utils.ListUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,7 +204,40 @@ public class CCustSaleController extends BaseController {
 		}
 		return "redirect:"+Global.getAdminPath()+"/xssj/cCustSale/?repage";
     }
-	
+	/**
+	 * 导入Excel数据
+
+	 */
+	@RequiresPermissions("xssj:cCustSale:import")
+	@RequestMapping(value = "import2", method=RequestMethod.POST)
+	@ResponseBody
+	public String importFile2(MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
+		InputStream inputStream = file.getInputStream();
+		CCustSaleListener excelListener = new CCustSaleListener();
+		EasyExcelFactory.readBySax(inputStream,new Sheet(1, 1), excelListener);
+		List<String> errorMsg = excelListener.getErrorMsg();
+		if(errorMsg!=null && errorMsg.size()>0){
+			addMessage(redirectAttributes, "导入企业核心数据失败！失败信息："+errorMsg.toString());
+			return "redirect:"+Global.getAdminPath()+"/xssj/cCustSale/?repage";
+		}
+		List<CCustSale> data = excelListener.getData();
+
+		Map<String, Integer> countMap = (Map<String, Integer>)CacheUtils.get("c_cust_sale_import_count");
+		//切割，每10000条插入一次
+		List<List<CCustSale>> lists = ListUtils.splitList(data, 10000);
+		int sum = 0;
+		long startTime = System.currentTimeMillis();
+		for(int i=0;i<lists.size();i++){
+			long startTime1 = System.currentTimeMillis();
+			int count = cCustSaleService.insertBatch(lists.get(i));
+			sum += count;
+			long endTime2 = System.currentTimeMillis();
+			String result = "第"+sum+"条数据导入数据库完毕，用时："+(endTime2-startTime1)/1000+"s";
+		}
+		long endTime3 = System.currentTimeMillis();
+		String result = "第"+sum+"条数据导入数据库完毕，用时："+(endTime3-startTime)/1000+"s";
+		return "redirect:"+Global.getAdminPath()+"/xssj/cCustSale/?repage";
+	}
 	/**
 	 * 下载导入企业核心数据数据模板
 	 */

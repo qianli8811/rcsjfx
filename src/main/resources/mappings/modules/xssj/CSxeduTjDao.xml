@@ -308,6 +308,46 @@
 			IFNULL(t6.dyyear, 0 ) AS dyyear,
 			IFNULL(t6.sanyear, 0 ) AS sanyear,
 			IFNULL(t6.dyear, 0 ) AS dyear,
+		${nianfen} AS nianfen,
+		<if test="yuefen != '' and yuefen != null ">
+			<if test="yuefen == '1'.toString()">
+				1 AS yuefen,
+			</if>
+			<if test="yuefen == '2'.toString()">
+				2 AS yuefen,
+			</if>
+			<if test="yuefen == '3'.toString()">
+				3 AS yuefen,
+			</if>
+			<if test="yuefen == '4'.toString()">
+				4 AS yuefen,
+			</if>
+			<if test="yuefen == '5'.toString()">
+				5 AS yuefen,
+			</if>
+			<if test="yuefen == '6'.toString()">
+				6 AS yuefen,
+			</if>
+			<if test="yuefen == '7'.toString()">
+				7 AS yuefen,
+			</if>
+			<if test="yuefen == '8'.toString()">
+				8 AS yuefen,
+			</if>
+			<if test="yuefen == '9'.toString()">
+				9 AS yuefen,
+			</if>
+			<if test="yuefen == '10'.toString()">
+				10 AS yuefen,
+			</if>
+			<if test="yuefen == '11'.toString()">
+				11 AS yuefen,
+			</if>
+			<if test="yuefen == '12'.toString()">
+				12 AS yuefen,
+			</if>
+		</if>
+
 			( IFNULL(t6.sanyear,0) / IFNULL( t6.zjzzcs, 6 ) ) / ( IFNULL( t6.flmzb, 100 ) / 100 ) * ( IFNULL( t6.khfzb, 60 ) / 100 ) - IFNULL( t6.rzje, 0 ) AS sxsxed,
 			( IFNULL(t6.sanyear,0) / IFNULL( t6.zjzzcs, 6 ) ) * ( IFNULL( t6.khfzb, 60 ) / 100 ) - IFNULL( t6.rzje, 0 ) AS sxxxed,
 			IFNULL(t6.qntqljxs,0) AS qntqljxs,
@@ -1016,4 +1056,10 @@
 		<!--<![CDATA[{CALL getKeHuTj(?,?,?,?,?,?)}]]>-->
 		{CALL getKeHuTj(?,?,?,?,?,?)}
 	</select>
+
+
+	<update id="deleteCSxeduTj" >
+		DELETE FROM c_sxedu_tj
+		WHERE nianfen = #{nianfen} and yuefen = #{yuefen}
+	</update>
 </mapper>

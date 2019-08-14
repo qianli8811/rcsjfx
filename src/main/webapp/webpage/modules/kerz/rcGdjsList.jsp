@@ -56,7 +56,8 @@
 
 		}
 		function add1(){
-			openDialog1("新增","${ctx}/kerz/rcGdjs/form","${width == null ? '800px' : width }", "${height == null ? '500px': height }");
+		    var rcGdxxId = $("#rcGdxxId").val();
+			openDialog1("新增","${ctx}/kerz/rcGdjs/form?rcGdxx.id="+rcGdxxId,"${width == null ? '800px' : width }", "${height == null ? '500px': height }");
 		}
 		function edit1(){
 
@@ -105,10 +106,10 @@
 	<!--查询条件-->
 	<div class="row">
 	<div class="col-sm-12">
-	<form:form id="searchForm" modelAttribute="rcGdjs" action="${ctx}/kerz/rcGdjs/" method="post" class="form-inline">
+	<form:form id="searchForm" modelAttribute="rcGdjs" action="${ctx}/kerz/rcGdjs" method="post" class="form-inline">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<input id="rcGdxx.id" name="rcGdxx.id" type="hidden" value="${rcGdjs.rcGdxx.id}"/>
+		<input id="rcGdxxId" name="rcGdxx.id" type="hidden" value="${rcGdjs.rcGdxx.id}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<%--<div class="form-group">--%>
 			<%--<span>股东：</span>--%>
@@ -126,14 +127,15 @@
 	<div class="col-sm-12">
 		<div class="pull-left">
 			<shiro:hasPermission name="kerz:rcGdjs:add">
+				<input id="rcGdxxId" name="rcGdxx.id" type="hidden" value="${rcGdjs.rcGdxx.id}"/>
 				<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" onclick="add1()" title="添加"><i class="fa fa-plus"></i> ${label == null ? '添加' : label}</button>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="kerz:rcGdjs:edit">
 				<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" onclick="edit1()" title="修改"><i class="fa fa-file-text-o"></i> ${label == null ? '修改' : label}</button>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="kerz:rcGdjs:del">
-				<table:delRow url="${ctx}/kerz/rcGdjs/deleteAll" id="contentTable"></table:delRow><!-- 删除按钮 -->
-			</shiro:hasPermission>
+			<%--<shiro:hasPermission name="kerz:rcGdjs:del">
+				<table:delRow url="${ctx}/kerz/rcGdjs/deleteAll?rcGdxx.id=${rcGdjs.rcGdxx.id}" id="contentTable"></table:delRow><!-- 删除按钮 -->
+			</shiro:hasPermission>--%>
 			<%--	<shiro:hasPermission name="kerz:rcGdjs:import">
 					<table:importExcel url="${ctx}/kerz/rcGdjs/import"></table:importExcel><!-- 导入按钮 -->
 				</shiro:hasPermission>

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.jeeplus.common.utils.IdGen;
+import com.jeeplus.common.utils.ListUtils;
 import com.jeeplus.modules.sys.entity.User;
 import com.jeeplus.modules.xssj.entity.CSxeduTj;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -60,7 +61,7 @@ public class CCustsaleTjService extends CrudService<CCustsaleTjDao, CCustsaleTj>
 		page.setList(list);
 		return page;
 	}
-	private CCustsaleTj getCCustsaleTj(CCustsaleTj cCustsaleTj){
+	private void getCCustsaleTj(CCustsaleTj cCustsaleTj){
 		
 		User user4 = new User();
 		user4.setId("1");
@@ -69,7 +70,7 @@ public class CCustsaleTjService extends CrudService<CCustsaleTjDao, CCustsaleTj>
 		cCustsaleTj.setCreateDate(new Date());
 		cCustsaleTj.setUpdateBy(user4);
 		cCustsaleTj.setUpdateDate(new Date());
-		return cCustsaleTj;
+		//return cCustsaleTj;
 	}
 	
 	/**
@@ -95,13 +96,14 @@ public class CCustsaleTjService extends CrudService<CCustsaleTjDao, CCustsaleTj>
 
 		
 		Calendar tableNamedate = Calendar.getInstance();
-		String tableName = "c_cust_sale"+tableNamedate.get(Calendar.YEAR);
+		String tableName = "c_cust_sale_"+tableNamedate.get(Calendar.YEAR);
 	
 		//tableName = "c_cust_sale_2014";
 		
 		CCustsaleTj cCustsaleTj = new CCustsaleTj();
 		cCustsaleTj.setTableName(tableName);//表名：默认当前年份
 		cCustsaleTj.setNianfen(tableNamedate.get(Calendar.YEAR));
+		//cCustsaleTj.setNianfen(2018);
 		
 		dao.deleteByNianfen(cCustsaleTj);//删除本年度的数据
 		
@@ -111,32 +113,47 @@ public class CCustsaleTjService extends CrudService<CCustsaleTjDao, CCustsaleTj>
 		String dateStr = sdf.format(date);
 		cCustsaleTj.setEndNianfen(dateStr);//结束时间
 
-		List<CCustsaleTj> lists1 = new ArrayList<CCustsaleTj>();
+		/*List<CCustsaleTj> lists1 = new ArrayList<CCustsaleTj>();
 		List<CCustsaleTj> lists2 = new ArrayList<CCustsaleTj>();
 		List<CCustsaleTj> lists3 = new ArrayList<CCustsaleTj>();
 		List<CCustsaleTj> lists4 = new ArrayList<CCustsaleTj>();
-
+		List<CCustsaleTj> lists5 = new ArrayList<CCustsaleTj>();*/
 		cCustsaleTj.setTjname(1);//销售收入
 		List<CCustsaleTj> xssr = dao.getXssjtj(cCustsaleTj);
-		for(int i = 0;i<xssr.size();i++){
+
+		List<List<CCustsaleTj>> lists = ListUtils.splitList(xssr, 5000);
+		for (int i=0;i<lists.size();i++){
+			List<CCustsaleTj> cCustsaleTjs = lists.get(i);
+			for(int j=0;j<cCustsaleTjs.size();j++){
+				getCCustsaleTj(cCustsaleTjs.get(j));
+			}
+			dao.insertBatch(cCustsaleTjs);
+		}
+
+		/*for(int i = 0;i<xssr.size();i++){
 			CCustsaleTj cCustsaleTj1 = xssr.get(i);
+			*//*if(cCustsaleTj1.getCkname().equals("临汾丰华油脂有限公司")){
+				System.out.println(cCustsaleTj1.toString());
+			}*//*
 			CCustsaleTj cCustsaleTj2 = getCCustsaleTj(cCustsaleTj1);
-			if(i>=0 && i <= 500){
+			if(i>=0 && i <= 1000){
 				lists1.add(cCustsaleTj2);
 			}
-			if(i >= 501 && i <= 1000){
+			if(i >= 1001 && i <= 2000){
 				lists2.add(cCustsaleTj2);
 			}
-			if(i >= 1001 && i <= 1500){
+			if(i >= 2001 && i <= 3000){
 				lists3.add(cCustsaleTj2);
 			}
-			if(i >= 1501 && i <= 2100){
+			if(i >= 3001 && i <= 4000){
 				lists4.add(cCustsaleTj2);
+			}else{
+				lists5.add(cCustsaleTj2);
 			}
 			
-		}
+		}*/
 		
-		if(lists1.size()>0){
+		/*if(lists1.size()>0){
 			dao.insertBatch(lists1);
 		}
 		if(lists2.size()>0){
@@ -147,7 +164,9 @@ public class CCustsaleTjService extends CrudService<CCustsaleTjDao, CCustsaleTj>
 		}
 		if(lists4.size()>0){
 			dao.insertBatch(lists4);
-		}
+		}if(lists5.size()>0){
+			dao.insertBatch(lists5);
+		}*/
 		/*lists = new ArrayList<CCustsaleTj>();
 		cCustsaleTj.setTjname(2);//净值
 		List<CCustsaleTj> jingzhi = dao.getXssjtj(cCustsaleTj);

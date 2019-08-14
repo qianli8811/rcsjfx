@@ -7,12 +7,14 @@
 	<script type="text/javascript" src="${ctxStatic}/bootstrap/3.3.4/js/bootstrap3-typeahead.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+
 			$.ajax({
 				type:"POST",
 				url:"${ctx}/xssj/cCustSale/search",
 				data:{"searchName":$("#khmc").val()},
 				success:function(data){
 					var source = data;
+					console.info(source);
 					$("#ckname").typeahead({
 						minLength: 2,//键入字数多少开始补全
 						showHintOnFocus: "true",//将显示所有匹配项
@@ -27,12 +29,21 @@
 
 			if(yuefen){
 				$("#yuefen option[value='${cSxeduTj.yuefen}']").attr("selected","selected");
-
 			}
-		});
+
+
+            var date=new Date;
+            var year=date.getFullYear();
+
+            for(var i=year+10;i>=year;i--){
+                var options = "<option value='" + i+"'>"+i+'年'+"</option>";
+                $("#nianfen").append(options);
+			}
+        });
 		function clearInput() {
 			$("#ckname").val("");
 		}
+
 	</script>
 </head>
 <body class="gray-bg">
@@ -72,9 +83,13 @@
 		<div class="form-group">
 			<span>客户名称：</span>
 			<input id="ckname" name="ckName" value="${cSxeduTj.ckName}" autocomplete="off" data-provide="typeahead" class=" form-control input-sm">
+
 			<span>时间：</span>
 			<%--<form:select path="yuefen" items="${fns:getDictList('yuefen')}" itemLabel="label" itemValue="value" htmlEscape="false" class=" form-control m-b"/>
 --%>
+			<select id = "nianfen" name="nianfen" class=" form-control m-b">
+
+			</select>
 			<select id = "yuefen" name="yuefen" class=" form-control m-b">
 				<option value="1" >1月</option>
 				<option value="2" >2月</option>
@@ -107,10 +122,17 @@
 	<div class="row">
 	<div class="col-sm-12">
 		<div class="pull-left">
-			<span><strong>截至<c:forEach items="${ztds}" var="ztdsMap" >
+			<span><strong>截至
+				<c:if test="${ !empty ztds }">
+					<c:forEach items="${ztds}" var="ztdsMap" >
 
-				${ztdsMap.jzrq}
-			</c:forEach> ，</strong></span>
+						${ztdsMap.jzrq}
+					</c:forEach>
+				</c:if>
+				<c:if test="${ empty ztds }">
+					<div id="date1"></div>
+				</c:if>
+				，</strong></span>
 			<span><strong>福临门整体预算达成率：
 							<c:forEach items="${ztds}" var="ztdsMap" >
 								<fmt:formatNumber  value="${ztdsMap.sydcl}"  type="percent" maxFractionDigits="2" />

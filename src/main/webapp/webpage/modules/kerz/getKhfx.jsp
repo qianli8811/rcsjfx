@@ -26,7 +26,7 @@
 
 			var myChart1 = echarts.init(document.getElementById('syzjgcJson'));
 			//生意资金构成
-			var syzjgcJson = ${syzjgcJson};
+			/*var syzjgcJson = ${syzjgcJson};*/
 			option1 = {
 				title : {
 					text: '生意资金构成',
@@ -47,7 +47,7 @@
 						type: 'pie',
 						radius : '55%',
 						center: ['50%', '60%'],
-						data:syzjgcJson,
+						data:${syzjgcJson},
 						itemStyle: {
 							emphasis: {
 								shadowBlur: 10,
@@ -60,7 +60,7 @@
 			};
 			var myChart2 = echarts.init(document.getElementById('tshzjjgJson'));
 			//重构后的生意资金构成
-			var tshzjjgJson = ${tshzjjgJson};
+			/*var tshzjjgJson = ${tshzjjgJson};*/
 			option2 = {
 				title : {
 					text: '生意资金构成',
@@ -81,7 +81,7 @@
 						type: 'pie',
 						radius : '55%',
 						center: ['50%', '60%'],
-						data:tshzjjgJson,
+						data:${tshzjjgJson},
 						itemStyle: {
 							emphasis: {
 								shadowBlur: 10,
@@ -144,6 +144,8 @@
 			myChart1.setOption(option1);
 			myChart2.setOption(option2);
 			myChart3.setOption(option3);
+
+
 		});
 	</script>
 </head>
@@ -194,9 +196,9 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" style=" white-space: nowrap; overflow: hidden; overflow-x: scroll; -webkit-backface-visibility: hidden; -webkit-overflow-scrolling: touch;">
 							<table id="gdTable"
-							       width="100%"   class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable" style="vertical-align: middle;">
+							       width="100%" rules="all"  class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable" style="vertical-align: middle;">
 								<thead>
 								<tr>
 									<th  rowspan="2" >类型</th>
@@ -205,15 +207,27 @@
 									<th   rowspan="2" >性别</th>
 									<th  rowspan="2" >年龄</th>
 									<th  rowspan="2" >占股比</th>
-									<th colspan="6" >家属信息</th>
+									<th colspan="17" >家属信息</th>
 								</tr>
 								<tr>
-									<th >与股东的关系</th>
+									<th >关系</th>
 									<th >姓名</th>
 									<th >身份证号</th>
 									<th >性别</th>
 									<th >年龄</th>
-									<th >占股比</th>
+									<th >职业</th>
+									<th >电话</th>
+									<th >是否已婚</th>
+									<th >是否担保</th>
+
+									<th >配偶姓名</th>
+									<th >配偶身份证号</th>
+									<th >配偶性别</th>
+									<th >配偶年龄</th>
+									<th >是否是股东</th>
+									<th >配偶学历</th>
+									<th >配偶职业</th>
+									<th >配偶电话</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -223,91 +237,218 @@
 										<c:if test="${not empty gdMap.value}" >
 											<c:set var="gdQsMapValue" value="${gdMap.value}"/>
 										</c:if>
-										<tr>
-											<td rowspan="${gdQsMapValue.size()}">
+
+										<c:if test="${not empty gdQsMapValue.size()}">
+											<tr>
+											<td rowspan="${gdQsMapValue.size()+1}">
 												<c:if test="${gdMap.key.khlx == '1'}">
 													股东
 												</c:if>
 											</td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.gdxm}" /></td>
-											<td rowspan="${gdQsMapValue.size()}"> <c:out value="${gdMap.key.sfzh}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.xb}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.nl}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}"> <c:out value="${gdMap.key.zgb}" /> </td>
-
-											<c:if test="${empty gdMap.value}">
-
-												<td>
-
-												</td>
-												<td>
-
-												</td>
-												<td>
-
-												</td>
-												<td>
-
-												</td>
-												<td>
-
-												</td>
-												<td>
-
-												</td>
+											<td rowspan="${gdQsMapValue.size()+1}">  <c:out value="${gdMap.key.gdxm}" /></td>
+											<td rowspan="${gdQsMapValue.size()+1}"> <c:out value="${gdMap.key.sfzh}" /> </td>
+											<td rowspan="${gdQsMapValue.size()+1}">  <c:if test="${gdMap.key.xb == '1'}">
+												男
 											</c:if>
+												<c:if test="${gdMap.key.xb == '2'}">
+													女
+												</c:if> </td>
+											<td rowspan="${gdQsMapValue.size()+1}">  <c:out value="${gdMap.key.nl}" /> </td>
+											<td rowspan="${gdQsMapValue.size()+1}"> <c:out value="${gdMap.key.zgb}" /> </td>
+											</tr>
+										</c:if>
+										<c:if test="${empty gdQsMapValue.size() }">
+											<tr>
+												<td rowspan="1">
+													<c:if test="${gdMap.key.khlx == '1'}">
+														股东
+													</c:if>
+												</td>
+												<td rowspan="1">  <c:out value="${gdMap.key.gdxm}" /></td>
+												<td rowspan="1"> <c:out value="${gdMap.key.sfzh}" /> </td>
+												<td rowspan="1">  <c:if test="${gdMap.key.xb == '1'}">
+													男
+												</c:if>
+													<c:if test="${gdMap.key.xb == '2'}">
+														女
+													</c:if> </td>
+												<td rowspan="1">  <c:out value="${gdMap.key.nl}" /> </td>
+												<td rowspan="1"> <c:out value="${gdMap.key.zgb}" /> </td>
+
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+
+											</tr>
+										</c:if>
+
 											<c:if test="${ not empty gdMap.value}">
 
 												<c:forEach items="${gdMap.value}" var="gdList">
-
+												<tr>
 													<td>
-														<c:if test="${gdMap.key.jtcy == '0'}">
+														<c:if test="${gdMap.key.jsgx == '0'}">
 															本人
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '1'}">
+														<c:if test="${gdMap.key.jsgx == '1'}">
 															配偶
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '2'}">
+														<c:if test="${gdMap.key.jsgx == '2'}">
 															女儿
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '3'}">
+														<c:if test="${gdMap.key.jsgx == '3'}">
 															儿子
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '4'}">
+														<c:if test="${gdMap.key.jsgx == '4'}">
 															兄弟
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '5'}">
+														<c:if test="${gdMap.key.jsgx == '5'}">
 															姐妹
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '6'}">
+														<c:if test="${gdMap.key.jsgx == '6'}">
 															父母
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '7'}">
+														<c:if test="${gdMap.key.jsgx == '7'}">
 															朋友
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '8'}">
+														<c:if test="${gdMap.key.jsgx == '8'}">
 															其它
 														</c:if>
 													</td>
 													<td>
-														<c:out value="${gdList.gdxm}" />
+														<c:out value="${gdList.jsxm}" />
 													</td>
 													<td>
 														<c:out value="${gdList.sfzh}" />
 													</td>
 													<td>
-														<c:out value="${gdList.xb}" />
+
+														<c:if test="${gdList.xb == '1'}">
+															男
+														</c:if>
+														<c:if test="${gdList.xb == '2'}">
+															女
+														</c:if>
 													</td>
 													<td>
 														<c:out value="${gdList.nl}" />
 													</td>
 													<td>
-														<c:out value="${gdList.zgb}" />
+														<c:out value="${gdList.job}" />
+													</td>
+													<td>
+														<c:out value="${gdList.telephone}" />
+													</td>
+													<td>
+
+														<c:if test="${gdList.isMarry == '1'}">
+															是
+														</c:if>
+														<c:if test="${gdList.isMarry == '0'}">
+															否
+														</c:if>
+													</td>
+													<td>
+
+														<c:if test="${gdList.isDbr == '1'}">
+															是
+														</c:if>
+														<c:if test="${gdList.isDbr == '0'}">
+															否
+														</c:if>
+													</td>
+													<td>
+														<c:out value="${gdList.peiouxm}" />
 													</td>
 
+													<td>
+														<c:out value="${gdList.peiousfzh}" />
+													</td>
+													<td>
+
+
+														<c:if test="${gdList.peiouxb == '1'}">
+															男
+														</c:if>
+														<c:if test="${gdList.peiouxb == '2'}">
+															女
+														</c:if>
+													</td>
+													<td>
+														<c:out value="${gdList.peiounl}" />
+													</td>
+													<td>
+
+
+														<c:if test="${gdList.peiouisdbr == '1'}">
+															是
+														</c:if>
+														<c:if test="${gdList.peiouisdbr == '0'}">
+															否
+														</c:if>
+													</td>
+													<td>
+														<c:out value="${gdList.peiouxl}" />
+													</td>
+													<td>
+														<c:out value="${gdList.peioujob}" />
+													</td>
+													<td>
+														<c:out value="${gdList.peioudh}" />
+													</td>
+
+												</tr>
 												</c:forEach>
 											</c:if>
-										</tr>
+
 									</c:if>
 								</c:forEach>
 								<c:forEach items="${gdMap}" var="gdMap" >
@@ -315,20 +456,43 @@
 										<c:if test="${not empty gdMap.value}" >
 											<c:set var="gdQsMapValue" value="${gdMap.value}"/>
 										</c:if>
-										<tr>
-											<td rowspan="${gdQsMapValue.size()}">
-												<c:if test="${gdMap.key.khlx == '2'}">
-													实际控股人
+
+										<c:if test="${not empty gdMap.value}" >
+											<tr>
+												<td rowspan="${gdQsMapValue.size()+1}">
+													<c:if test="${gdMap.key.khlx == '2'}">
+														实际控股人
+													</c:if>
+												</td>
+												<td rowspan="${gdQsMapValue.size()+1}">  <c:out value="${gdMap.key.gdxm}" /></td>
+												<td rowspan="${gdQsMapValue.size()+1}"> <c:out value="${gdMap.key.sfzh}" /> </td>
+												<td rowspan="${gdQsMapValue.size()+1}">  <c:if test="${gdMap.key.xb == '1'}">
+													男
 												</c:if>
-											</td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.gdxm}" /></td>
-											<td rowspan="${gdQsMapValue.size()}"> <c:out value="${gdMap.key.sfzh}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.xb}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.nl}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}"> <c:out value="${gdMap.key.zgb}" /> </td>
-
-											<c:if test="${empty gdMap.value}">
-
+													<c:if test="${gdMap.key.xb == '2'}">
+														女
+													</c:if> </td>
+												<td rowspan="${gdQsMapValue.size()+1}">  <c:out value="${gdMap.key.nl}" /> </td>
+												<td rowspan="${gdQsMapValue.size()+1}"> <c:out value="${gdMap.key.zgb}" /> </td>
+											</tr>
+										</c:if>
+										<c:if test="${ empty gdMap.value}" >
+											<tr>
+												<td rowspan="1">
+													<c:if test="${gdMap.key.khlx == '2'}">
+														实际控股人
+													</c:if>
+												</td>
+												<td rowspan="1">  <c:out value="${gdMap.key.gdxm}" /></td>
+												<td rowspan="1"> <c:out value="${gdMap.key.sfzh}" /> </td>
+												<td rowspan="1">  <c:if test="${gdMap.key.xb == '1'}">
+													男
+												</c:if>
+													<c:if test="${gdMap.key.xb == '2'}">
+														女
+													</c:if> </td>
+												<td rowspan="1">  <c:out value="${gdMap.key.nl}" /> </td>
+												<td rowspan="1"> <c:out value="${gdMap.key.zgb}" /> </td>
 												<td>
 
 												</td>
@@ -347,79 +511,206 @@
 												<td>
 
 												</td>
-											</c:if>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+												<td>
+
+												</td>
+
+											</tr>
+										</c:if>
+
 											<c:if test="${ not empty gdMap.value}">
 
 												<c:forEach items="${gdMap.value}" var="gdList">
-
+													<tr>
 													<td>
-														<c:if test="${gdMap.key.jtcy == '0'}">
+														<c:if test="${gdMap.key.jsgx == '0'}">
 															本人
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '1'}">
+														<c:if test="${gdMap.key.jsgx == '1'}">
 															配偶
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '2'}">
+														<c:if test="${gdMap.key.jsgx == '2'}">
 															女儿
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '3'}">
+														<c:if test="${gdMap.key.jsgx == '3'}">
 															儿子
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '4'}">
+														<c:if test="${gdMap.key.jsgx == '4'}">
 															兄弟
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '5'}">
+														<c:if test="${gdMap.key.jsgx == '5'}">
 															姐妹
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '6'}">
+														<c:if test="${gdMap.key.jsgx == '6'}">
 															父母
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '7'}">
+														<c:if test="${gdMap.key.jsgx == '7'}">
 															朋友
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '8'}">
+														<c:if test="${gdMap.key.jsgx == '8'}">
 															其它
 														</c:if>
 													</td>
-													<td>
-														<c:out value="${gdList.gdxm}" />
-													</td>
-													<td>
-														<c:out value="${gdList.sfzh}" />
-													</td>
-													<td>
-														<c:out value="${gdList.xb}" />
-													</td>
-													<td>
-														<c:out value="${gdList.nl}" />
-													</td>
-													<td>
-														<c:out value="${gdList.zgb}" />
-													</td>
+														<td>
+															<c:out value="${gdList.jsxm}" />
+														</td>
+														<td>
+															<c:out value="${gdList.sfzh}" />
+														</td>
+														<td>
 
+															<c:if test="${gdList.xb == '1'}">
+																男
+															</c:if>
+															<c:if test="${gdList.xb == '2'}">
+																女
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.nl}" />
+														</td>
+														<td>
+															<c:out value="${gdList.job}" />
+														</td>
+														<td>
+															<c:out value="${gdList.telephone}" />
+														</td>
+														<td>
+
+															<c:if test="${gdList.isMarry == '1'}">
+																是
+															</c:if>
+															<c:if test="${gdList.isMarry == '0'}">
+																否
+															</c:if>
+														</td>
+														<td>
+
+															<c:if test="${gdList.isDbr == '1'}">
+																是
+															</c:if>
+															<c:if test="${gdList.isDbr == '0'}">
+																否
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.peiouxm}" />
+														</td>
+
+														<td>
+															<c:out value="${gdList.peiousfzh}" />
+														</td>
+														<td>
+
+
+															<c:if test="${gdList.peiouxb == '1'}">
+																男
+															</c:if>
+															<c:if test="${gdList.peiouxb == '2'}">
+																女
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.peiounl}" />
+														</td>
+														<td>
+
+
+															<c:if test="${gdList.peiouisdbr == '1'}">
+																是
+															</c:if>
+															<c:if test="${gdList.peiouisdbr == '0'}">
+																否
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.peiouxl}" />
+														</td>
+														<td>
+															<c:out value="${gdList.peioujob}" />
+														</td>
+														<td>
+															<c:out value="${gdList.peioudh}" />
+														</td>
+													</tr>
 												</c:forEach>
 											</c:if>
 										</tr>
 									</c:if>
 								</c:forEach>
+
 								<c:forEach items="${gdMap}" var="gdMap" >
 									<c:if test="${gdMap.key.khlx == '3'}" >
 										<c:if test="${not empty gdMap.value}" >
 											<c:set var="gdQsMapValue" value="${gdMap.value}"/>
 										</c:if>
-										<tr>
-											<td rowspan="${gdQsMapValue.size()}">
+
+										<c:if test="${not empty gdMap.value}" >
+											<tr>
+											<td rowspan="${gdQsMapValue.size()+1}">
 												<c:if test="${gdMap.key.khlx == '3'}">
 													担保人
 												</c:if>
 											</td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.gdxm}" /></td>
-											<td rowspan="${gdQsMapValue.size()}"> <c:out value="${gdMap.key.sfzh}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.xb}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}">  <c:out value="${gdMap.key.nl}" /> </td>
-											<td rowspan="${gdQsMapValue.size()}"> <c:out value="${gdMap.key.zgb}" /> </td>
+											<td rowspan="${gdQsMapValue.size()+1}">  <c:out value="${gdMap.key.gdxm}" /></td>
+											<td rowspan="${gdQsMapValue.size()+1}"> <c:out value="${gdMap.key.sfzh}" /> </td>
+											<td rowspan="${gdQsMapValue.size()+1}">  <c:if test="${gdMap.key.xb == '1'}">
+												男
+											</c:if>
+												<c:if test="${gdMap.key.xb == '2'}">
+													女
+												</c:if> </td>
+											<td rowspan="${gdQsMapValue.size()+1}">  <c:out value="${gdMap.key.nl}" /> </td>
+											<td rowspan="${gdQsMapValue.size()+1}"> <c:out value="${gdMap.key.zgb}" /> </td>
+											</tr>
+										</c:if>
 
 											<c:if test="${empty gdMap.value}">
+												<tr>
+													<td rowspan="1">
+														<c:if test="${gdMap.key.khlx == '3'}">
+															担保人
+														</c:if>
+													</td>
+													<td rowspan="1">  <c:out value="${gdMap.key.gdxm}" /></td>
+													<td rowspan="1"> <c:out value="${gdMap.key.sfzh}" /> </td>
+													<td rowspan="1">
+														<c:if test="${gdMap.key.xb == '1'}">
+															男
+														</c:if>
+														<c:if test="${gdMap.key.xb == '2'}">
+															女
+														</c:if>
+													</td>
+													<td rowspan="1">  <c:out value="${gdMap.key.nl}" /> </td>
+													<td rowspan="1"> <c:out value="${gdMap.key.zgb}" /> </td>
 
 												<td>
 
@@ -439,58 +730,161 @@
 												<td>
 
 												</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+													<td>
+
+													</td>
+												</tr>
 											</c:if>
 											<c:if test="${ not empty gdMap.value}">
 
 												<c:forEach items="${gdMap.value}" var="gdList">
-
+													<tr>
 													<td>
-														<c:if test="${gdMap.key.jtcy == '0'}">
+														<c:if test="${gdList.jsgx == '0'}">
 															本人
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '1'}">
+														<c:if test="${gdList.jsgx == '1'}">
 															配偶
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '2'}">
+														<c:if test="${gdList.jsgx == '2'}">
 															女儿
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '3'}">
+														<c:if test="${gdList.jsgx == '3'}">
 															儿子
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '4'}">
+														<c:if test="${gdList.jsgx == '4'}">
 															兄弟
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '5'}">
+														<c:if test="${gdList.jsgx == '5'}">
 															姐妹
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '6'}">
+														<c:if test="${gdList.jsgx == '6'}">
 															父母
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '7'}">
+														<c:if test="${gdList.jsgx == '7'}">
 															朋友
 														</c:if>
-														<c:if test="${gdMap.key.jtcy == '8'}">
+														<c:if test="${gdList.jsgx == '8'}">
 															其它
 														</c:if>
 													</td>
 													<td>
-														<c:out value="${gdList.gdxm}" />
+														<c:out value="${gdList.jsxm}" />
 													</td>
 													<td>
 														<c:out value="${gdList.sfzh}" />
 													</td>
 													<td>
-														<c:out value="${gdList.xb}" />
+
+														<c:if test="${gdList.xb == '1'}">
+															男
+														</c:if>
+														<c:if test="${gdList.xb == '2'}">
+															女
+														</c:if>
 													</td>
 													<td>
 														<c:out value="${gdList.nl}" />
 													</td>
 													<td>
-														<c:out value="${gdList.zgb}" />
+														<c:out value="${gdList.job}" />
 													</td>
+														<td>
+															<c:out value="${gdList.telephone}" />
+														</td>
+														<td>
 
+															<c:if test="${gdList.isMarry == '1'}">
+																是
+															</c:if>
+															<c:if test="${gdList.isMarry == '0'}">
+																否
+															</c:if>
+													</td>
+														<td>
+
+															<c:if test="${gdList.isDbr == '1'}">
+																是
+															</c:if>
+															<c:if test="${gdList.isDbr == '0'}">
+																否
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.peiouxm}" />
+														</td>
+
+														<td>
+															<c:out value="${gdList.peiousfzh}" />
+														</td>
+														<td>
+
+
+															<c:if test="${gdList.peiouxb == '1'}">
+																男
+															</c:if>
+															<c:if test="${gdList.peiouxb == '2'}">
+																女
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.peiounl}" />
+														</td>
+														<td>
+
+
+															<c:if test="${gdList.peiouisdbr == '1'}">
+																是
+															</c:if>
+															<c:if test="${gdList.peiouisdbr == '0'}">
+																否
+															</c:if>
+														</td>
+														<td>
+															<c:out value="${gdList.peiouxl}" />
+														</td>
+														<td>
+															<c:out value="${gdList.peioujob}" />
+														</td>
+														<td>
+															<c:out value="${gdList.peioudh}" />
+														</td>
+
+													</tr>
 												</c:forEach>
+
 											</c:if>
+
 										</tr>
 									</c:if>
 								</c:forEach>
@@ -668,17 +1062,6 @@
 							</c:forEach>
 							</tbody>
 						</table>
-
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row animated fadeInRight">
-			<div class="col-sm-12">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<i class="fa fa-rss-square"></i> 客户销售数据明细汇总(图表)
 					</div>
 
 					<div class="panel-body">
@@ -688,6 +1071,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="row animated fadeInRight">
 			<div class="col-sm-12">
 				<div class="panel panel-primary">

@@ -31,14 +31,14 @@ public class CCustSale extends DataEntity<CCustSale> {
 	private String chanpinxianmiaoshu;		// 产品线描述
 	private String wuliaobianma;		// 物料编码
 	private String wuliaomiaoshu;		// 物料描述
-	private String xiang;		// 箱
-	private String dun;		// 吨
-	private String xiaoshoushouru;		// 销售收入
-	private String jingzhi;		// 净值
-	private String shuie;		// 税额
-	private String zhanlvjine;		// 战略价金额
-	private String zhekoujine;		// 折扣金额
-	private String zhekoubili;		// 折扣百分比
+	private Double xiang;		// 箱
+	private Double dun;		// 吨
+	private Double xiaoshoushouru;		// 销售收入
+	private Double jingzhi;		// 净值
+	private Double shuie;		// 税额
+	private Double zhanlvjine;		// 战略价金额
+	private Double zhekoujine;		// 折扣金额
+	private Double zhekoubili;		// 折扣百分比
 	private String shoudafangjiancheng;		// 售达方简称
 	private Date fapiaoshiqi;		// 出具发票日期
 	private String dingdanbianhao;		// 订单号码
@@ -176,74 +176,74 @@ public class CCustSale extends DataEntity<CCustSale> {
 	}
 	
 	@ExcelField(title="箱", align=2, sort=14)
-	public String getXiang() {
+	public Double getXiang() {
 		return xiang;
 	}
 
-	public void setXiang(String xiang) {
+	public void setXiang(Double xiang) {
 		this.xiang = xiang;
 	}
 	
 	@ExcelField(title="吨", align=2, sort=15)
-	public String getDun() {
+	public Double getDun() {
 		return dun;
 	}
 
-	public void setDun(String dun) {
+	public void setDun(Double dun) {
 		this.dun = dun;
 	}
 	
 	@ExcelField(title="销售收入", align=2, sort=16)
-	public String getXiaoshoushouru() {
+	public Double getXiaoshoushouru() {
 		return xiaoshoushouru;
 	}
 
-	public void setXiaoshoushouru(String xiaoshoushouru) {
+	public void setXiaoshoushouru(Double xiaoshoushouru) {
 		this.xiaoshoushouru = xiaoshoushouru;
 	}
 	
 	@ExcelField(title="净值", align=2, sort=17)
-	public String getJingzhi() {
+	public Double getJingzhi() {
 		return jingzhi;
 	}
 
-	public void setJingzhi(String jingzhi) {
+	public void setJingzhi(Double jingzhi) {
 		this.jingzhi = jingzhi;
 	}
 	
 	@ExcelField(title="税额", align=2, sort=18)
-	public String getShuie() {
+	public Double getShuie() {
 		return shuie;
 	}
 
-	public void setShuie(String shuie) {
+	public void setShuie(Double shuie) {
 		this.shuie = shuie;
 	}
 	
 	@ExcelField(title="战略价金额", align=2, sort=19)
-	public String getZhanlvjine() {
+	public Double getZhanlvjine() {
 		return zhanlvjine;
 	}
 
-	public void setZhanlvjine(String zhanlvjine) {
+	public void setZhanlvjine(Double zhanlvjine) {
 		this.zhanlvjine = zhanlvjine;
 	}
 	
 	@ExcelField(title="折扣金额", align=2, sort=20)
-	public String getZhekoujine() {
+	public Double getZhekoujine() {
 		return zhekoujine;
 	}
 
-	public void setZhekoujine(String zhekoujine) {
+	public void setZhekoujine(Double zhekoujine) {
 		this.zhekoujine = zhekoujine;
 	}
 	
 	@ExcelField(title="折扣百分比", align=2, sort=21)
-	public String getZhekoubili() {
+	public Double getZhekoubili() {
 		return zhekoubili;
 	}
 
-	public void setZhekoubili(String zhekoubili) {
+	public void setZhekoubili(Double zhekoubili) {
 		this.zhekoubili = zhekoubili;
 	}
 	

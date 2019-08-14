@@ -22,6 +22,8 @@ import java.util.Map;
 public interface CSxeduTjDao extends CrudDao<CSxeduTj> {
 	
 	public List<CSxeduTj> getCSxeduTj(CSxeduTj cSxeduTj);
+
+	public void deleteCSxeduTj(CSxeduTj cSxeduTj);
 	
 	public void insertBatchCSxeduTj(List<CSxeduTj> list);
 	

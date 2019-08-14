@@ -1,6 +1,8 @@
 package com.jeeplus.test;
 
 
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.metadata.Sheet;
 import com.jeeplus.common.persistence.Page;
 import com.jeeplus.common.utils.IdGen;
 import com.jeeplus.common.utils.StringUtils;
@@ -8,18 +10,25 @@ import com.jeeplus.modules.kerz.entity.RcKhzl;
 import com.jeeplus.modules.kerz.entity.Tbuy;
 import com.jeeplus.modules.kerz.service.RcKhzlService;
 import com.jeeplus.modules.kerz.service.TbuyService;
+import com.jeeplus.modules.xssj.entity.CCustSale;
 import com.jeeplus.modules.xssj.entity.CSxeduTj;
 import com.jeeplus.modules.xssj.service.CCustSaleService;
 
 
 import com.jeeplus.modules.xssj.service.CCustsaleTjService;
 import com.jeeplus.modules.xssj.service.CSxeduTjService;
+import com.jeeplus.modules.xssj.utils.CCustSaleListener;
+import com.jeeplus.modules.xssj.utils.ListUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
@@ -43,7 +52,36 @@ public class WebServiceTest {
 	
 	@Autowired
 	private TbuyService tbuyService;
-	
+	/**
+	 * 销售数据
+	 */
+	@Test
+	public void insertBatch() throws FileNotFoundException {
+		long startTime = System.currentTimeMillis();
+
+		FileInputStream fis = new FileInputStream(new File("D:\\excetodb\\2019-06月份销售收入.xlsx"));
+
+		CCustSaleListener excelListener = new CCustSaleListener();
+		EasyExcelFactory.readBySax(fis,new Sheet(1, 1), excelListener);
+		List<CCustSale> data = excelListener.getData();
+		System.out.println(data.size());
+		long endTime = System.currentTimeMillis();
+		System.out.println("耗时："+(endTime-startTime)/1000+"s");
+
+		List<List<CCustSale>> lists = ListUtils.splitList(data, 10000);
+		int sum = 0;
+		for(int i=0;i<lists.size();i++){
+			long startTime1 = System.currentTimeMillis();
+			int count = cCustSaleService.insertBatch(lists.get(i));
+			sum += count;
+			long endTime2 = System.currentTimeMillis();
+			System.out.println("第"+sum+"条数据导入数据库完毕，用时："+(endTime2-startTime1)/1000+"s");
+		}
+
+		long endTime3 = System.currentTimeMillis();
+		System.out.println("总用时："+(endTime3-startTime)/1000+"s");
+
+	}
 	
 	/**
 	 * 销售数据
@@ -154,6 +192,16 @@ public class WebServiceTest {
 	public void getSXTJ() {
 		cCustsaleTjService.sxeduTjTask();
 	}
+
+	@Test
+	public void deleteCSxeduTj() {
+		CSxeduTj cSxeduTj = new CSxeduTj();
+		int year = 2018;
+		int month = 12;
+		cSxeduTj.setNianfen(year);
+		cSxeduTj.setYuefen(month);
+		cSxeduTjService.deleteCSxeduTj(cSxeduTj);
+	}
 	/**
 	 * 授信额度
 	 */
@@ -162,13 +210,14 @@ public class WebServiceTest {
 		Calendar date = Calendar.getInstance();	//当前年份
 		System.out.println(date.get(Calendar.MONTH));
 		CSxeduTj cSxeduTj = new CSxeduTj();
-		int year = 2018;
-		int month = 11;
+		int year = 2019;
+		int month = 1;
 		cSxeduTj.setNianfen(year);
 		cSxeduTj.setYuefen(month);
 
 		cSxeduTj.setCreateDate(new Date());
 		cSxeduTj.setUpdateDate(new Date());
+		cSxeduTjService.deleteCSxeduTj(cSxeduTj);
 		List<CSxeduTj> list1 = cSxeduTjService.getCSxeduTj(cSxeduTj);
 		
 		List<CSxeduTj> list2 = new ArrayList<>();

@@ -7,7 +7,6 @@
 	<script type="text/javascript">
 		var jsonData ;
 		$(document).ready(function() {
-
 			$.ajax({
 				type:"POST",
 				url:"${ctx}/xssj/cCustSale/search",
@@ -17,6 +16,11 @@
 				}
 			});
 
+			var bn = $('#beginNianfen').val();
+			var en = $('#endNianfen').val();
+
+			console.info(bn);
+			console.info(en);
 
 			var myDate= new Date();
 			var startYear=myDate.getFullYear()-10;//起始年份
@@ -29,9 +33,9 @@
 				myDate1.setFullYear(a);
 				myDate1.setDate(1);
 				myDate1.setMonth(0);
-				if(a == (endYear-1)){
-					html1 += "<option selected=\"selected\" value='"+myDate1.getFullYear().toString()+"'>"+a+"年"+"</option>";
-				}else {
+				if(a == bn){
+					html1 += "<option selected=\"selected\" value='"+ bn +"'>"+bn+"年"+"</option>";
+				}{
 					html1 +="<option value='"+myDate1.getFullYear().toString()+"'>"+a+"年"+"</option>";
 				}
 			}
@@ -49,8 +53,8 @@
 
 				myDate2.setDate((new Date(myDate2.getTime()-1000*60*60*24)).getDate());
 
-				if(i == endYear){
-					str += "<option selected=\"selected\" value='"+i+"'>"+i+"年"+"</option>";
+				if(i == en){
+					html1 += "<option selected=\"selected\" value='"+ en +"'>"+en+"年"+"</option>";
 				}else{
 					str += "<option value='"+i+"'>"+i+"年"+"</option>";
 				}
@@ -116,6 +120,9 @@
 	<form:form id="searchForm" modelAttribute="cCustsaleTj" action="${ctx}/xssj/cCustsaleTj/" method="post" class="form-inline">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<%--<input id="bn" name="beginNianfen" type="hidden" value="${cCustsaleTj.beginNianfen}"/>
+		<input id="en" name="endNianfen" type="hidden" value="${cCustsaleTj.endNianfen}"/>--%>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<div class="form-group">
 
@@ -129,19 +136,15 @@
 
 			<span>时间：</span>
 				<form:select   path="beginNianfen" class="form-control m-b" style="width:100px">
-					<c:if test="${!empty cCustsaleTj.beginNianfen}">
-						<form:option value="${cCustsaleTj.beginNianfen}">
-							${cCustsaleTj.beginNianfen}
-						</form:option>
-					</c:if>
+					<form:option value="${cCustsaleTj.beginNianfen}">
+						${cCustsaleTj.beginNianfen}年
+					</form:option>
 				</form:select>
 				--
 				<form:select    path="endNianfen" class="form-control m-b" style="width:100px">
-					<c:if test="${!empty cCustsaleTj.endNianfen}">
-						<form:option value="${cCustsaleTj.endNianfen}">
-							${cCustsaleTj.endNianfen}
-						</form:option>
-					</c:if>
+					<form:option value="${cCustsaleTj.endNianfen}">
+						${cCustsaleTj.endNianfen}年
+					</form:option>
 				</form:select >
 
 

@@ -203,8 +203,12 @@ public class CCustsaleTjService extends CrudService<CCustsaleTjDao, CCustsaleTj>
 		System.out.println("共耗时："+(endtTime-startTime)/1000+"秒");
 	}
 	/**
-	 * 当月的授信额度
+	 * 统计每个公司，每年月的销售收入，净值，税额，战略价金额
 	 */
+	public List<CCustsaleTj> getXssjtj(CCustsaleTj cCustsaleTj){
+		return dao.getXssjtj(cCustsaleTj);
+
+	}
 
 	
 }

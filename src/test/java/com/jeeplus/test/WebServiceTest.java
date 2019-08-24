@@ -11,6 +11,7 @@ import com.jeeplus.modules.kerz.entity.Tbuy;
 import com.jeeplus.modules.kerz.service.RcKhzlService;
 import com.jeeplus.modules.kerz.service.TbuyService;
 import com.jeeplus.modules.xssj.entity.CCustSale;
+import com.jeeplus.modules.xssj.entity.CCustsaleTj;
 import com.jeeplus.modules.xssj.entity.CSxeduTj;
 import com.jeeplus.modules.xssj.service.CCustSaleService;
 
@@ -185,6 +186,35 @@ public class WebServiceTest {
 			}
 		}
 	}
+	/**
+	 * 重新计算所有销售数据
+	 */
+	@Test
+	public void getSXTJAll(){
+		CCustsaleTj cCustsaleTj = new CCustsaleTj();
+
+		cCustsaleTj.setTjname(1);//销售收入
+		List<CCustsaleTj> x1 = cCustsaleTjService.getXssjtj(cCustsaleTj);
+		System.out.println("销售收入:"+x1.size());
+
+		cCustsaleTj.setTjname(2);//净值
+		List<CCustsaleTj> x2 = cCustsaleTjService.getXssjtj(cCustsaleTj);
+		System.out.println("净值:"+x2.size());
+
+		cCustsaleTj.setTjname(3);//税额
+		List<CCustsaleTj> x3 = cCustsaleTjService.getXssjtj(cCustsaleTj);
+		System.out.println("税额:"+x3.size());
+
+		cCustsaleTj.setTjname(4);//战略价金额
+		List<CCustsaleTj> x4 = cCustsaleTjService.getXssjtj(cCustsaleTj);
+		System.out.println("战略价金额:"+x4.size());
+
+
+		System.out.println("合计："+(x1.size()+x2.size()+x3.size()+x4.size()));
+
+	}
+
+
 	/**
 	 * 销售数据统计
 	 */
